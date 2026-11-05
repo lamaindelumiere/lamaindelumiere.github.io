@@ -1,0 +1,74 @@
+{
+  "nom": "Chapelet personnalisé",
+  "masquer": false,
+  "ordre": 20,
+  "categorie": "chapelets",
+  "prix": 15,
+  "badge": "Le plus demandé",
+  "photo": "images/chapelet-personnalise.jpg",
+  "galerie": [],
+  "resume": "Choix des couleurs et de la médaille, selon les matériaux.",
+  "accroche": "Composez un chapelet qui vous ressemble : vous choisissez les couleurs des perles et la médaille, selon les matériaux disponibles.",
+  "description": "Avec le chapelet personnalisé, vous participez à la création : couleurs des perles, médaille, finition dorée ou argentée… Chaque chapelet devient unique, créé avec amour et selon vos envies.\n\nParfait pour un baptême, une communion ou pour offrir un cadeau qui a du sens. Vous pouvez ajouter un prénom ou une demande particulière.",
+  "composition": "Perles au choix, croix, médaille au choix, maillons ou fil marin",
+  "points_forts": [],
+  "options": [
+    {
+      "libelle": "Couleur des perles",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Blanc nacré",
+        "Rose poudré",
+        "Bleu ciel",
+        "Cristal transparent",
+        "Doré",
+        "Multicolore",
+        "Autre (à préciser ci-dessous)"
+      ]
+    },
+    {
+      "libelle": "Médaille",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Vierge Marie",
+        "Vierge Miraculeuse",
+        "Sacré-Cœur de Jésus",
+        "Saint Michel Archange",
+        "Autre (à préciser ci-dessous)"
+      ]
+    },
+    {
+      "libelle": "Finition de la croix et des maillons",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Doré",
+        "Argenté"
+      ]
+    },
+    {
+      "libelle": "Occasion",
+      "type": "liste",
+      "obligatoire": false,
+      "choix": [
+        "Baptême",
+        "Première communion & Communion",
+        "Confirmation",
+        "Mariage",
+        "Ordination",
+        "Intentions de prière",
+        "Pèlerinages",
+        "Autres événements",
+        "Cadeau / dévotion personnelle"
+      ]
+    },
+    {
+      "libelle": "Prénom ou demande particulière",
+      "type": "texte",
+      "obligatoire": false,
+      "choix": []
+    }
+  ]
+}

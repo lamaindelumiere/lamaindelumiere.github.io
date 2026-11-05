@@ -1,0 +1,41 @@
+{
+  "nom": "Fils de marin",
+  "masquer": false,
+  "ordre": 60,
+  "categorie": "maillons-fils",
+  "prix": null,
+  "badge": "Sur commande",
+  "photo": "images/fils-marin.jpg",
+  "galerie": [],
+  "resume": "Résistants, souples, finition élégante. Plusieurs coloris.",
+  "accroche": "Des fils de qualité pour des créations qui durent : résistants, souples et élégants, idéals pour les chapelets faits main.",
+  "description": "Le fil marin (fil nylon tressé) est le choix idéal pour monter des chapelets solides : il est résistant, souple et offre une finition élégante.\n\nDisponible sur commande en blanc, doré, noir, rose et bleu. Indiquez la couleur et la quantité souhaitées : je vous confirme le prix et la disponibilité.",
+  "composition": "Fil nylon tressé (fil marin)",
+  "points_forts": [
+    "Résistants",
+    "Souples",
+    "Finition élégante",
+    "Idéal pour des chapelets faits main"
+  ],
+  "options": [
+    {
+      "libelle": "Couleur",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Blanc",
+        "Doré",
+        "Noir",
+        "Rose",
+        "Bleu",
+        "Autre (à préciser)"
+      ]
+    },
+    {
+      "libelle": "Quantité / épaisseur / précisions",
+      "type": "texte",
+      "obligatoire": false,
+      "choix": []
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "nom": "Maillons pour chapelets",
+  "masquer": false,
+  "ordre": 50,
+  "categorie": "maillons-fils",
+  "prix": null,
+  "badge": "Sur commande",
+  "photo": "images/maillons.jpg",
+  "galerie": [],
+  "resume": "Maillons classique, ovale, cœur ou rond, dorés ou argentés.",
+  "accroche": "Des maillons solides et élégants pour réaliser vos propres chapelets, disponibles sur commande, dorés ou argentés.",
+  "description": "Pour un chapelet encore plus unique et personnalisé ! Nos maillons existent en quatre modèles (classique, ovale, cœur et rond), en finition dorée ou argentée.\n\nSolides, élégants et durables, ils sont disponibles sur commande. Indiquez le modèle, la finition et la quantité souhaitée : je vous confirme le prix et la disponibilité.",
+  "composition": "Maillons métal, finition dorée ou argentée",
+  "points_forts": [
+    "Solides",
+    "Élégants",
+    "Durables"
+  ],
+  "options": [
+    {
+      "libelle": "Modèle",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Maillon classique",
+        "Maillon ovale",
+        "Maillon cœur",
+        "Maillon rond"
+      ]
+    },
+    {
+      "libelle": "Finition",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Doré",
+        "Argenté"
+      ]
+    },
+    {
+      "libelle": "Quantité souhaitée / précisions",
+      "type": "texte",
+      "obligatoire": false,
+      "choix": []
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+# Publication automatique du site sur GitHub Pages.
+# À chaque modification enregistrée dans l'espace admin (Pages CMS),
+# les pages HTML sont refabriquées et le site en ligne est mis à jour (≈ 1 minute).
+name: Publier le site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - name: Récupérer les fichiers
+        uses: actions/checkout@v7
+
+      - name: Installer Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Installer l'outil photo
+        run: pip install pillow
+
+      - name: Fabriquer les pages du site
+        run: python outils/generer_site.py
+
+      - name: Optimiser les photos (taille, orientation)
+        run: python outils/optimiser_images.py site-html/images
+
+      - name: Préparer GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Envoyer le site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site-html
+
+      - name: Mettre en ligne
+        id: deploiement
+        uses: actions/deploy-pages@v5

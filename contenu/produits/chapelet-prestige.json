@@ -1,0 +1,63 @@
+{
+  "nom": "Chapelet modèle prestige",
+  "masquer": false,
+  "ordre": 30,
+  "categorie": "chapelets",
+  "prix": 20,
+  "badge": "Prestige",
+  "photo": "images/chapelet-prestige.jpg",
+  "galerie": [],
+  "resume": "Finitions plus travaillées et détails dorés.",
+  "accroche": "Notre création la plus raffinée : des finitions plus travaillées, des détails dorés et une croix ouvragée, pour les grandes célébrations.",
+  "description": "Le modèle prestige est pensé pour les moments les plus solennels. Perles soigneusement choisies, coupelles et détails dorés, croix ouvragée et médaille encadrée : chaque détail est travaillé avec soin.\n\nUn chapelet précieux à offrir pour une confirmation, un mariage ou une ordination, et à transmettre.",
+  "composition": "Perles sélectionnées, détails dorés, croix ouvragée, médaille encadrée",
+  "points_forts": [],
+  "options": [
+    {
+      "libelle": "Couleur des perles",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Cristal transparent",
+        "Blanc nacré",
+        "Rose poudré",
+        "Bleu ciel",
+        "Autre (à préciser ci-dessous)"
+      ]
+    },
+    {
+      "libelle": "Médaille",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Vierge Marie",
+        "Vierge Miraculeuse",
+        "Sacré-Cœur de Jésus",
+        "Saint Michel Archange",
+        "Autre (à préciser ci-dessous)"
+      ]
+    },
+    {
+      "libelle": "Occasion",
+      "type": "liste",
+      "obligatoire": false,
+      "choix": [
+        "Baptême",
+        "Première communion & Communion",
+        "Confirmation",
+        "Mariage",
+        "Ordination",
+        "Intentions de prière",
+        "Pèlerinages",
+        "Autres événements",
+        "Cadeau / dévotion personnelle"
+      ]
+    },
+    {
+      "libelle": "Prénom ou demande particulière",
+      "type": "texte",
+      "obligatoire": false,
+      "choix": []
+    }
+  ]
+}

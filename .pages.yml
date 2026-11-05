@@ -1,0 +1,276 @@
+# =====================================================================
+#  ESPACE ADMIN « La Main de Lumière »  —  configuration Pages CMS
+#  (https://app.pagescms.org). Ce fichier décrit ce qui est modifiable.
+#  Inutile d'y toucher pour gérer la boutique au quotidien.
+# =====================================================================
+
+media:
+  input: site-html/images
+  output: images
+  extensions: [jpg, jpeg, png, webp]
+  rename: safe
+
+content:
+
+  # ------------------------------------------------------------ PRODUITS
+  - name: produits
+    label: "🛍️ Produits (prix, photos, descriptions)"
+    type: collection
+    path: contenu/produits
+    format: json
+    filename:
+      template: "{nom}.json"
+      field: false
+    view:
+      primary: nom
+      fields: [nom, prix, categorie, masquer]
+      sort: [ordre, nom, prix]
+      default:
+        sort: ordre
+        order: asc
+    fields:
+      - name: nom
+        label: "Nom du produit"
+        type: string
+        required: true
+      - name: masquer
+        label: "Masquer ce produit (ne plus l'afficher sur le site)"
+        description: "Cochez pour cacher le produit sans le supprimer (rupture de matériel, vacances…)."
+        type: boolean
+      - name: prix
+        label: "Prix en euros"
+        description: "Exemple : 15 ou 12.5 — Laissez VIDE pour afficher « Sur devis »."
+        type: number
+        options:
+          min: 0
+      - name: categorie
+        label: "Catégorie"
+        type: select
+        required: true
+        options:
+          values:
+            - { name: chapelets, label: "Chapelets" }
+            - { name: sur-mesure, label: "Sur mesure" }
+            - { name: maillons-fils, label: "Maillons & fils" }
+      - name: photo
+        label: "Photo principale"
+        description: "Photo verticale de préférence. Les grandes photos du téléphone sont réduites automatiquement."
+        type: image
+        required: true
+      - name: galerie
+        label: "Photos supplémentaires (facultatif)"
+        description: "Jusqu'à 8 photos, affichées en vignettes sous la photo principale."
+        type: image
+        options:
+          multiple:
+            max: 8
+      - name: badge
+        label: "Petite étiquette sur la photo (facultatif)"
+        description: "Exemples : Le plus demandé, Nouveau, Prestige, Sur commande. Laissez vide pour aucune étiquette."
+        type: string
+      - name: resume
+        label: "Phrase courte (affichée dans la boutique)"
+        type: string
+        required: true
+      - name: accroche
+        label: "Phrase d'accroche (en haut de la fiche produit)"
+        type: text
+      - name: description
+        label: "Description"
+        description: "Laissez une ligne vide entre deux paragraphes."
+        type: text
+      - name: composition
+        label: "Composition"
+        type: string
+      - name: points_forts
+        label: "Points forts (facultatif)"
+        description: "Petite liste ✓ affichée sur l'accueil pour les maillons et fils."
+        type: string
+        list: true
+      - name: options
+        label: "Choix proposés au client"
+        description: "Couleurs, médaille, finition… « Liste de choix » = menu déroulant ; « Texte » = le client écrit librement."
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{libelle}"
+        fields:
+          - name: libelle
+            label: "Intitulé (ex. : Couleur des perles)"
+            type: string
+            required: true
+          - name: type
+            label: "Type"
+            type: select
+            options:
+              values:
+                - { name: liste, label: "Liste de choix" }
+                - { name: texte, label: "Texte court" }
+                - { name: texte-long, label: "Texte long" }
+          - name: obligatoire
+            label: "Choix obligatoire pour commander"
+            type: boolean
+          - name: choix
+            label: "Choix possibles (pour une liste de choix)"
+            type: string
+            list: true
+      - name: ordre
+        label: "Ordre d'affichage"
+        description: "Plus le nombre est petit, plus le produit apparaît en premier (10, 20, 30…)."
+        type: number
+
+  # ------------------------------------------------------------ TEXTES & PHOTOS
+  - name: textes
+    label: "🖼️ Accueil & page « La créatrice »"
+    type: file
+    path: contenu/textes.json
+    format: json
+    fields:
+      - name: banniere_photo
+        label: "Grande photo de la bannière d'accueil"
+        type: image
+      - name: banniere_citation
+        label: "Citation sous le titre de l'accueil"
+        type: string
+      - name: citation_milieu
+        label: "Citation au milieu de l'accueil"
+        type: string
+      - name: creatrice_photo
+        label: "Photo de la créatrice"
+        type: image
+      - name: creatrice_titre
+        label: "Titre du bloc « La créatrice » (accueil)"
+        type: string
+      - name: creatrice_accueil
+        label: "Texte « La créatrice » sur l'accueil"
+        description: "Laissez une ligne vide entre deux paragraphes."
+        type: text
+      - name: creatrice_page
+        label: "Texte de la page « La créatrice »"
+        description: "Votre histoire. Laissez une ligne vide entre deux paragraphes."
+        type: text
+
+  # ------------------------------------------------------------ RÉALISATIONS
+  - name: realisations
+    label: "📷 Mes réalisations (galerie photos)"
+    type: file
+    path: contenu/realisations.json
+    format: json
+    list: true
+    fields:
+      - name: photo
+        label: "Photo"
+        type: image
+        required: true
+      - name: legende
+        label: "Légende (facultatif)"
+        description: "Exemple : Chapelet de baptême pour Emma"
+        type: string
+
+  # ------------------------------------------------------------ RÉGLAGES
+  - name: reglages
+    label: "⚙️ Réglages de la boutique"
+    type: file
+    path: contenu/reglages.json
+    format: json
+    fields:
+      - name: nom
+        label: "Nom de la boutique"
+        type: string
+        required: true
+      - name: metier
+        label: "Sous-titre (sous le nom)"
+        type: string
+      - name: lieu
+        label: "Lieu"
+        type: string
+      - name: bandeau
+        label: "Bandeau d'annonce (tout en haut du site)"
+        type: string
+      - name: telephone
+        label: "Téléphone affiché"
+        description: "Tel qu'il apparaît sur le site, ex. : +590 690 60 12 72"
+        type: string
+      - name: whatsapp
+        label: "Numéro WhatsApp qui reçoit les commandes"
+        description: "Format international SANS + ni espaces, ex. : 590690601272"
+        type: string
+        required: true
+        pattern:
+          regex: "^[0-9]{8,15}$"
+          message: "Uniquement des chiffres, sans + ni espaces (ex. 590690601272)"
+      - name: email
+        label: "E-mail qui reçoit les commandes"
+        type: string
+      - name: instagram
+        label: "Compte Instagram (sans @)"
+        type: string
+      - name: delai
+        label: "Délai de création"
+        description: "Ex. : 5 à 10 jours"
+        type: string
+      - name: livraisons
+        label: "Modes de livraison"
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{nom}"
+        fields:
+          - name: nom
+            label: "Nom du mode de livraison"
+            type: string
+            required: true
+          - name: prix
+            label: "Prix en euros (0 = gratuit)"
+            type: number
+            options:
+              min: 0
+          - name: delai
+            label: "Délai / précision"
+            type: string
+          - name: offerte_des
+            label: "Offerte à partir de … € d'achat (facultatif)"
+            type: number
+            options:
+              min: 0
+          - name: main_propre
+            label: "C'est une remise en main propre (pas d'adresse demandée, paiement à la remise possible)"
+            type: boolean
+      - name: virement
+        label: "Coordonnées bancaires (virement)"
+        type: object
+        fields:
+          - name: titulaire
+            label: "Titulaire du compte"
+            type: string
+          - name: iban
+            label: "IBAN"
+            type: string
+          - name: bic
+            label: "BIC"
+            type: string
+      - name: carte
+        label: "Paiement par carte (plus tard)"
+        type: object
+        fields:
+          - name: actif
+            label: "Activer le bouton « Payer par carte »"
+            type: boolean
+          - name: lien
+            label: "Lien de votre page de paiement (SumUp, Stripe, PayPal…)"
+            type: string
+      - name: legal
+        label: "Mentions légales"
+        type: object
+        fields:
+          - name: editrice
+            label: "Éditrice (nom, statut, SIRET)"
+            type: string
+          - name: directrice
+            label: "Directrice de la publication"
+            type: string
+          - name: hebergeur
+            label: "Hébergeur"
+            type: string

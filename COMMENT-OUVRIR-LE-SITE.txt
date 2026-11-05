@@ -1,0 +1,21 @@
+LA MAIN DE LUMIÈRE — OUVRIR LE SITE SUR VOTRE ORDINATEUR
+=========================================================
+
+1. Décompressez le fichier zip (clic droit > « Extraire tout… » sur Windows,
+   double-clic sur Mac).
+
+2. Dans le dossier « la-main-de-lumiere », double-cliquez sur :
+     - Windows : OUVRIR-LE-SITE (Windows).bat
+     - Mac     : OUVRIR-LE-SITE (Mac).command
+                 (la 1re fois : clic droit > Ouvrir > Ouvrir, car le Mac
+                  bloque les fichiers téléchargés)
+
+   Le site s'ouvre dans votre navigateur à l'adresse http://localhost:8000/
+   Laissez la petite fenêtre noire ouverte pendant que vous regardez le site.
+
+3. Solution encore plus simple (sans rien installer) :
+   ouvrez le dossier « site-html » et double-cliquez sur « index.html ».
+   Le site, le panier et les boutons WhatsApp fonctionnent aussi.
+
+⚠️ Ne modifiez pas les pages .html à la main : envoyez-moi vos modifications
+   (ou utilisez l'espace admin une fois le site publié, voir README.md).

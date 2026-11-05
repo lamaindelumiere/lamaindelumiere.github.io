@@ -1,0 +1,55 @@
+{
+  "nom": "La Main de Lumière",
+  "metier": "Créatrice de chapelets",
+  "lieu": "Guadeloupe",
+  "telephone": "+590 690 60 12 72",
+  "whatsapp": "590690601272",
+  "instagram": "la_main_de_lumiere_off",
+  "email": "contact@lamaindelumiere.gp",
+  "delai": "5 à 10 jours",
+  "bandeau": "Chapelets faits main en Guadeloupe · Créations sur commande · Envoi offert en Guadeloupe dès 40 €",
+  "livraisons": [
+    {
+      "nom": "Remise en main propre (Guadeloupe)",
+      "prix": 0,
+      "delai": "Lieu et date à convenir ensemble",
+      "offerte_des": null,
+      "main_propre": true
+    },
+    {
+      "nom": "Envoi suivi en Guadeloupe",
+      "prix": 4,
+      "delai": "2 à 4 jours après création",
+      "offerte_des": 40,
+      "main_propre": false
+    },
+    {
+      "nom": "Martinique, Guyane, St-Martin, St-Barth",
+      "prix": 7,
+      "delai": "5 à 8 jours après création",
+      "offerte_des": null,
+      "main_propre": false
+    },
+    {
+      "nom": "France métropolitaine (lettre suivie)",
+      "prix": 9,
+      "delai": "7 à 12 jours après création",
+      "offerte_des": null,
+      "main_propre": false
+    }
+  ],
+  "virement": {
+    "titulaire": "La Main de Lumière",
+    "iban": "FR76 0000 0000 0000 0000 0000 000",
+    "bic": "XXXXXXXXXXX"
+  },
+  "carte": {
+    "actif": false,
+    "lien": ""
+  },
+  "legal": {
+    "editrice": "[Nom, statut (ex. micro-entreprise), SIRET]",
+    "directrice": "[Nom]",
+    "hebergeur": "GitHub Pages — GitHub Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis"
+  }
+}

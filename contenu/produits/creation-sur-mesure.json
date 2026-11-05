@@ -1,0 +1,50 @@
+{
+  "nom": "Création sur mesure",
+  "masquer": false,
+  "ordre": 40,
+  "categorie": "sur-mesure",
+  "prix": null,
+  "badge": "",
+  "photo": "images/creatrice.jpg",
+  "galerie": [],
+  "resume": "Un chapelet ou une création d'image entièrement imaginés avec vous.",
+  "accroche": "Vous avez une idée précise ? Décrivez votre projet : je le réalise pour vous, sur mesure, et vous envoie un devis.",
+  "description": "Pour une demande qui sort de l'ordinaire : un chapelet aux couleurs d'une cérémonie, plusieurs chapelets assortis pour une famille ou des invités, une création d'image personnalisée…\n\nDécrivez votre projet ci-dessous : je vous recontacte rapidement pour en discuter et vous proposer un prix.",
+  "composition": "Selon votre projet",
+  "points_forts": [],
+  "options": [
+    {
+      "libelle": "Type de création",
+      "type": "liste",
+      "obligatoire": true,
+      "choix": [
+        "Chapelet sur mesure",
+        "Plusieurs chapelets (famille, invités…)",
+        "Création d'image personnalisée",
+        "Autre demande"
+      ]
+    },
+    {
+      "libelle": "Occasion",
+      "type": "liste",
+      "obligatoire": false,
+      "choix": [
+        "Baptême",
+        "Première communion & Communion",
+        "Confirmation",
+        "Mariage",
+        "Ordination",
+        "Intentions de prière",
+        "Pèlerinages",
+        "Autres événements",
+        "Cadeau / dévotion personnelle"
+      ]
+    },
+    {
+      "libelle": "Décrivez votre projet",
+      "type": "texte-long",
+      "obligatoire": true,
+      "choix": []
+    }
+  ]
+}

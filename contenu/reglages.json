@@ -2,18 +2,17 @@
   "nom": "La Main de Lumière",
   "metier": "Créatrice de chapelets",
   "lieu": "Guadeloupe",
+  "bandeau": "Chapelets faits main en Guadeloupe · Créations sur commande · Envoi offert en Guadeloupe dès 40 €",
   "telephone": "+590 690 60 12 72",
   "whatsapp": "590690601272",
-  "instagram": "la_main_de_lumiere_off",
-  "email": "contact@lamaindelumiere.gp",
+  "email": "contactlamaindelumiere@gmail.com",
+  "instagram": "la_main_de_lumiere",
   "delai": "5 à 10 jours",
-  "bandeau": "Chapelets faits main en Guadeloupe · Créations sur commande · Envoi offert en Guadeloupe dès 40 €",
   "livraisons": [
     {
       "nom": "Remise en main propre (Guadeloupe)",
       "prix": 0,
       "delai": "Lieu et date à convenir ensemble",
-      "offerte_des": null,
       "main_propre": true
     },
     {
@@ -27,14 +26,12 @@
       "nom": "Martinique, Guyane, St-Martin, St-Barth",
       "prix": 7,
       "delai": "5 à 8 jours après création",
-      "offerte_des": null,
       "main_propre": false
     },
     {
       "nom": "France métropolitaine (lettre suivie)",
       "prix": 9,
       "delai": "7 à 12 jours après création",
-      "offerte_des": null,
       "main_propre": false
     }
   ],
@@ -44,8 +41,7 @@
     "bic": "XXXXXXXXXXX"
   },
   "carte": {
-    "actif": false,
-    "lien": ""
+    "actif": false
   },
   "legal": {
     "editrice": "[Nom, statut (ex. micro-entreprise), SIRET]",

@@ -105,6 +105,25 @@ Champ **Ordre d'affichage** : 10, 20, 30… Le plus petit apparaît en premier. 
 
 ---
 
+## 📦 Bon de livraison & étiquette d'envoi
+
+Chaque commande reçue (WhatsApp ou e-mail) se termine par un lien **« 📄 Récapitulatif imprimable »**.
+
+1. **Cliquez sur ce lien** (sur ordinateur, c'est plus pratique pour imprimer).
+2. La page affiche le **bon de livraison** (format A4) et l'**étiquette d'envoi** (10 × 15 cm), déjà remplis avec la commande.
+3. Choisissez vos options : prix affichés ou non, mention « Fragile », format de l'étiquette (feuille A4 à découper, ou imprimante d'étiquettes 10 × 15).
+4. Cliquez sur **🖨️ Imprimer le bon de livraison** puis sur **🏷️ Imprimer l'étiquette**. Dans la fenêtre d'impression, vous pouvez aussi choisir « Enregistrer au format PDF ».
+
+✏️ Avant d'imprimer, vous pouvez **cliquer sur n'importe quel texte** pour le corriger (adresse, quantité, prix d'un article sur devis…).
+
+**Votre adresse d'expéditeur** : à remplir une fois dans l'espace admin → ⚙️ Réglages de la boutique → *Expéditeur*.
+
+**Commande reçue sans lien ?** Ouvrez `https://lamaindelumiere.github.io/commande.html`, collez le message de la commande, ou choisissez « Bon vierge » pour tout remplir à la main.
+
+> ℹ️ L'étiquette porte les adresses (expéditeur et destinataire). L'affranchissement et le numéro de suivi s'achètent à La Poste (timbre, Lettre suivie ou Colissimo) : collez-les dans la case « Timbre » prévue en haut à droite.
+
+---
+
 ## Petit lexique (l'interface Pages CMS est en anglais)
 
 | Anglais | Français |

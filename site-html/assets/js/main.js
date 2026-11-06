@@ -27,6 +27,11 @@ if (typeof BOUTIQUE === 'undefined') {
 
   function lirePanier() { try { return JSON.parse(stockage.lire('lml_panier')) || []; } catch (e) { return []; } }
   function ecrirePanier(p) { stockage.ecrire('lml_panier', JSON.stringify(p)); majCompteur(); }
+  // Encodage compact des données de commande (UTF-8 -> base64 « url »)
+  function encoderCommande(obj) {
+    var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
   function euros(n) { return Number(n).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function $(sel, ctx) { return (ctx || document).querySelector(sel); }
@@ -263,9 +268,23 @@ if (typeof BOUTIQUE === 'undefined') {
       if (liv.id !== 'retrait') lignes.push('Adresse : ' + d.get('adresse') + ', ' + d.get('cp') + ' ' + d.get('ville') + ', ' + d.get('territoire'));
       lignes.push('Paiement souhaité : ' + paiements[d.get('paiement')]);
       if (String(d.get('message') || '').trim()) lignes.push('', 'Message : ' + d.get('message'));
+
+      // Lien vers le bon de livraison / étiquette pré-remplis (données dans l'adresse, après le #)
+      var retrait = liv.id === 'retrait';
+      var donnees = {
+        v: 1, r: ref, d: new Date().toISOString().slice(0, 10),
+        i: panier.map(function (i) { return [i.nom, i.qte, i.prix == null ? null : i.prix, (i.options || []).map(function (o) { return [o.nom, o.valeur]; })]; }),
+        l: [liv.nom, liv.cout, retrait ? 1 : 0],
+        c: { n: d.get('nom') || '', t: d.get('telephone') || '', e: d.get('email') || '',
+             a: retrait ? '' : (d.get('adresse') || ''), p: retrait ? '' : (d.get('cp') || ''),
+             v: retrait ? '' : (d.get('ville') || ''), y: retrait ? '' : (d.get('territoire') || '') },
+        dc: d.get('date') || '', pm: paiements[d.get('paiement')] || '', m: String(d.get('message') || '').trim()
+      };
+      var lien = new URL('commande.html', location.href).href.split('#')[0] + '#c=' + encoderCommande(donnees);
+      lignes.push('', '📄 Récapitulatif imprimable :', lien);
       var texte = lignes.join('\n');
       return {
-        ref: ref, total: sousTotal + liv.cout, devis: aDevis, paiement: d.get('paiement'), texte: texte,
+        ref: ref, total: sousTotal + liv.cout, devis: aDevis, paiement: d.get('paiement'), texte: texte, lien: lien,
         whatsapp: 'https://wa.me/' + BOUTIQUE.whatsapp + '?text=' + encodeURIComponent(texte),
         email: 'mailto:' + BOUTIQUE.email + '?subject=' + encodeURIComponent('Commande ' + ref + ' — ' + d.get('nom')) + '&body=' + encodeURIComponent(texte)
       };
@@ -296,6 +315,7 @@ if (typeof BOUTIQUE === 'undefined') {
         '<p class="muted">Votre commande vient de s\'ouvrir dans WhatsApp ou dans votre messagerie : pensez à appuyer sur <strong>Envoyer</strong>. Nous revenons vers vous très vite pour confirmer votre création' + (c.devis ? ' et vous transmettre le devis' : '') + '.</p>' +
         instructions +
         '<p class="small muted" style="margin-top:24px">Rien ne s\'est ouvert ? Renvoyez votre commande : <a href="' + esc(c.whatsapp) + '" target="_blank" rel="noopener">par WhatsApp</a> · <a href="' + esc(c.email) + '">par e-mail</a></p>' +
+        (c.lien ? '<p style="margin-top:18px"><a class="btn" href="' + esc(c.lien) + '" target="_blank" rel="noopener">📄 Voir / imprimer mon récapitulatif</a></p>' : '') +
         '<a href="boutique.html" class="btn btn-ghost">Retour à la boutique</a></div>';
       z.hidden = false;
       window.scrollTo(0, 0);

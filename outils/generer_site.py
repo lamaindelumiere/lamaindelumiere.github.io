@@ -184,7 +184,7 @@ def texte_livraison(l, gras=False):
 def affiche_prix(p): return prix(p['prix']) if p['prix'] is not None else 'Sur devis'
 
 # ------------------------------------------------------------------ GABARIT
-def page(fichier, titre, corps, actif='', description=SLOGAN):
+def page(fichier, titre, corps, actif='', description=SLOGAN, extra_head='', extra_scripts=''):
     nav = [('index.html', 'Accueil', 'accueil'), ('boutique.html', 'Boutique', 'boutique'), ('celebrations.html', 'Célébrations', 'celebrations'),
            ('creatrice.html', 'La créatrice', 'creatrice'), ('contact.html', 'Contact', 'contact')]
     if REALISATIONS: nav.insert(3, ('realisations.html', 'Réalisations', 'realisations'))
@@ -201,7 +201,7 @@ def page(fichier, titre, corps, actif='', description=SLOGAN):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&amp;family=Great+Vibes&amp;family=Nunito+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">{extra_head}
 </head>
 <body>
 
@@ -262,7 +262,7 @@ def page(fichier, titre, corps, actif='', description=SLOGAN):
 
   <a href="https://wa.me/{WA}" class="wa-float" data-lien-whatsapp target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp">{ICON['wa']}</a>
   <script src="assets/js/reglages.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/main.js"></script>{extra_scripts}
 </body>
 </html>
 '''
@@ -781,7 +781,11 @@ def realisations():
 def ecrire_reglages_js():
     carte = REG.get('carte') or {}
     vir = REG.get('virement') or {}
-    config = dict(nom=NOM, whatsapp=WA, email=EMAIL, instagram=INSTA, livraisons=LIVRAISONS,
+    exp = REG.get('expediteur') or {}
+    expediteur = dict(nom=exp.get('nom') or NOM, adresse=exp.get('adresse') or '', cp=exp.get('cp') or '',
+                      ville=exp.get('ville') or '', territoire=exp.get('territoire') or LIEU,
+                      telephone=exp.get('telephone') or TEL, slogan=METIER)
+    config = dict(nom=NOM, whatsapp=WA, email=EMAIL, instagram=INSTA, telephone=TEL, expediteur=expediteur, livraisons=LIVRAISONS,
                   virement=dict(titulaire=vir.get('titulaire') or NOM, iban=vir.get('iban') or '', bic=vir.get('bic') or ''),
                   carte=dict(actif=bool(carte.get('actif') and carte.get('lien')), lien=carte.get('lien') or ''))
     os.makedirs(os.path.join(OUT, 'assets', 'js'), exist_ok=True)
@@ -789,6 +793,53 @@ def ecrire_reglages_js():
         f.write('/* Fichier fabriqué automatiquement à partir de contenu/reglages.json — ne pas modifier ici :\n'
                 '   utilisez l\'espace admin (« Réglages de la boutique »). */\n'
                 'var BOUTIQUE = ' + json.dumps(config, ensure_ascii=False, indent=2) + ';\n')
+
+def commande():
+    """Page « Bon de livraison & étiquette » (ouverte depuis le lien de chaque commande)."""
+    page('commande.html', 'Bon de livraison', f'''
+    <section class="container commande-outil">
+      <div class="no-print">
+        <div class="section-head" style="margin-top:34px"><span class="script">Récapitulatif de commande</span><h1>Bon de livraison &amp; étiquette</h1>{ORN}</div>
+
+        <!-- Si la page est ouverte sans commande -->
+        <div class="card-form narrow" data-chargement>
+          <p><strong>Collez ici le message de commande</strong> reçu par WhatsApp ou par e-mail (ou seulement le lien « Récapitulatif imprimable ») :</p>
+          <textarea id="coller" rows="6" placeholder="Bonjour La Main de Lumière ! Je souhaite passer commande : …"></textarea>
+          <p class="flash flash-error" data-erreur hidden>Je ne trouve pas de lien « Récapitulatif imprimable » dans ce texte. Les commandes passées avant cette nouveauté n'en ont pas : utilisez « Bon vierge » et complétez-le à la main.</p>
+          <div class="hero-actions" style="justify-content:flex-start">
+            <button type="button" class="btn" data-charger>Afficher la commande</button>
+            <button type="button" class="btn btn-ghost" data-vierge>Bon vierge (à remplir)</button>
+          </div>
+        </div>
+      </div>
+
+      <div data-documents hidden>
+        <div class="doc-barre no-print">
+          <div class="doc-actions">
+            <button type="button" class="btn" data-imprimer-bon>🖨️ Imprimer le bon de livraison</button>
+            <button type="button" class="btn btn-ghost" data-imprimer-etiquette>🏷️ Imprimer l'étiquette</button>
+            <button type="button" class="link" data-autre-commande>Autre commande</button>
+          </div>
+          <div class="doc-options">
+            <label class="check"><input type="checkbox" id="opt-prix" checked> Afficher les prix sur le bon</label>
+            <label class="check"><input type="checkbox" id="opt-fragile" checked> Mention « Fragile » sur l'étiquette</label>
+            <label>Format de l'étiquette :
+              <select id="opt-format">
+                <option value="a4">Feuille A4 (imprimante normale, à découper)</option>
+                <option value="thermique">Imprimante d'étiquettes 10 × 15 cm</option>
+              </select></label>
+          </div>
+          <p class="small muted">✏️ Vous pouvez cliquer sur n'importe quel texte du bon ou de l'étiquette pour le corriger avant d'imprimer.</p>
+        </div>
+
+        <h2 class="doc-legende no-print">Bon de livraison</h2>
+        <article class="doc-feuille" data-bon></article>
+
+        <h2 class="doc-legende no-print">Étiquette d'envoi <small>(10 × 15 cm)</small></h2>
+        <div class="et-cadre"><article class="etiquette" data-etiquette></article></div>
+      </div>
+    </section>
+''', '', 'Bon de livraison et étiquette d\'envoi', '\n  <meta name="robots" content="noindex, nofollow">', '\n  <script src="assets/js/commande.js"></script>')
 
 def page404():
     page('404.html', 'Page introuvable', f'''
@@ -803,6 +854,6 @@ def page404():
 if __name__ == '__main__':
     for f in glob.glob(os.path.join(OUT, '*.html')): os.remove(f)
     ecrire_reglages_js()
-    accueil(); boutique(); panier(); celebrations(); creatrice(); contact(); legales(); realisations(); page404()
+    accueil(); boutique(); panier(); celebrations(); creatrice(); contact(); legales(); realisations(); commande(); page404()
     for p in PRODUITS: fiche(p)
     print('Pages générées :', sorted(os.path.basename(f) for f in glob.glob(os.path.join(OUT, '*.html'))))

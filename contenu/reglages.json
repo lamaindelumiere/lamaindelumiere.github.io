@@ -35,6 +35,13 @@
       "main_propre": false
     }
   ],
+  "expediteur": {
+    "nom": "La Main de Lumière - NOLANE",
+    "cp": "97122",
+    "ville": "Baie-Mahault",
+    "territoire": "Guadeloupe",
+    "telephone": "+590 690 60 12 72"
+  },
   "virement": {
     "titulaire": "La Main de Lumière",
     "iban": "FR76 0000 0000 0000 0000 0000 000",

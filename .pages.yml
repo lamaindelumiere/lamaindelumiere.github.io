@@ -238,6 +238,28 @@ content:
           - name: main_propre
             label: "C'est une remise en main propre (pas d'adresse demandée, paiement à la remise possible)"
             type: boolean
+      - name: expediteur
+        label: "Expéditeur (adresse imprimée sur le bon de livraison et l'étiquette)"
+        type: object
+        fields:
+          - name: nom
+            label: "Nom de l'expéditeur"
+            type: string
+          - name: adresse
+            label: "Adresse (n° et rue)"
+            type: string
+          - name: cp
+            label: "Code postal"
+            type: string
+          - name: ville
+            label: "Ville"
+            type: string
+          - name: territoire
+            label: "Territoire / pays"
+            type: string
+          - name: telephone
+            label: "Téléphone"
+            type: string
       - name: virement
         label: "Coordonnées bancaires (virement)"
         type: object

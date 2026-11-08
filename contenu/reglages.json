@@ -48,7 +48,7 @@
     "bic": "CMCIFR2A"
   },
   "carte": {
-    "actif": false,
+    "actif": true,
     "lien": "En cours de création "
   },
   "legal": {

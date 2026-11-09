@@ -10,20 +10,20 @@
   "delai": "5 à 10 jours",
   "livraisons": [
     {
-      "nom": "Remise en main propre (Guadeloupe) (Par virement uniquement) ",
+      "nom": "Remise en main propre (Guadeloupe) ",
       "prix": 0,
       "delai": "Lieu et date à convenir ensemble",
       "main_propre": true
     },
     {
-      "nom": "Envoi suivi en Guadeloupe (Par virement uniquement)",
+      "nom": "Envoi suivi en Guadeloupe ",
       "prix": 4,
       "delai": "2 à 4 jours après création",
       "offerte_des": 40,
       "main_propre": false
     },
     {
-      "nom": "Martinique, Guyane, St-Martin, St-Barth (Par virement uniquement)",
+      "nom": "Martinique, Guyane, St-Martin, St-Barth ",
       "prix": 7,
       "delai": "5 à 8 jours après création",
       "main_propre": false

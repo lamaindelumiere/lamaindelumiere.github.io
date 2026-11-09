@@ -43,8 +43,8 @@
     "telephone": "+590 690 60 12 72"
   },
   "paiements": {
-    "virement": "non",
-    "carte": "non",
+    "virement": "oui",
+    "carte": "bientot",
     "remise": "non"
   },
   "virement": {

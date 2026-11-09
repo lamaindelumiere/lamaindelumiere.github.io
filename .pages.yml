@@ -260,6 +260,33 @@ content:
           - name: telephone
             label: "Téléphone"
             type: string
+      - name: paiements
+        label: "💳 Moyens de paiement proposés sur le site"
+        type: object
+        fields:
+          - name: virement
+            label: "Virement bancaire"
+            type: select
+            options:
+              values:
+                - { name: oui, label: "✅ Proposé" }
+                - { name: non, label: "⛔ Masqué" }
+          - name: carte
+            label: "Carte bancaire"
+            type: select
+            options:
+              values:
+                - { name: whatsapp, label: "✅ Proposé — j'envoie moi-même un lien de paiement (WhatsApp)" }
+                - { name: bouton, label: "✅ Proposé — bouton « Payer par carte » automatique (lien ci-dessous)" }
+                - { name: bientot, label: "⏳ Affiché grisé « Bientôt disponible »" }
+                - { name: non, label: "⛔ Masqué" }
+          - name: remise
+            label: "Paiement à la remise en main propre (espèces ou carte)"
+            type: select
+            options:
+              values:
+                - { name: oui, label: "✅ Proposé (seulement si le client choisit la remise en main propre)" }
+                - { name: non, label: "⛔ Masqué" }
       - name: virement
         label: "Coordonnées bancaires (virement)"
         type: object
@@ -274,14 +301,11 @@ content:
             label: "BIC"
             type: string
       - name: carte
-        label: "Paiement par carte (plus tard)"
+        label: "Lien du bouton « Payer par carte » (seulement pour le choix « bouton automatique »)"
         type: object
         fields:
-          - name: actif
-            label: "Activer le bouton « Payer par carte »"
-            type: boolean
           - name: lien
-            label: "Lien de votre page de paiement (SumUp, Stripe, PayPal…)"
+            label: "Lien de votre page de paiement (doit commencer par https:// — SumUp, Stripe, PayPal…)"
             type: string
       - name: legal
         label: "Mentions légales"

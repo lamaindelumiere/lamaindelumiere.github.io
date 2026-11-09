@@ -168,7 +168,6 @@ if (typeof BOUTIQUE === 'undefined') {
         (l.offerteDes ? ' · offerte dès ' + euros(l.offerteDes) : '') + '</small></span>' +
         '<span class="option-price" data-prix-livraison="' + l.id + '"></span></label>';
     }).join('');
-    if (BOUTIQUE.carte.actif) $('[data-carte-desc]').textContent = 'Paiement sécurisé en ligne après envoi de la commande';
 
     function livraisonChoisie(sousTotal) {
       var id = (form.querySelector('input[name=livraison]:checked') || {}).value;
@@ -215,11 +214,27 @@ if (typeof BOUTIQUE === 'undefined') {
       var retrait = liv.id === 'retrait';
       $('[data-adresse]').hidden = retrait;
       $$('[data-adresse] input[data-requis]').forEach(function (inp) { inp.required = !retrait; });
+      // (les moyens de paiement proposés se règlent dans l'espace admin → Réglages)
       var optRetrait = $('[data-paiement-retrait]');
-      optRetrait.classList.toggle('disabled', !retrait);
-      var radio = $('input', optRetrait);
-      radio.disabled = !retrait;
-      if (!retrait && radio.checked) { radio.checked = false; form.querySelector('input[name=paiement][value=virement]').checked = true; }
+      var optConvenir = $('[data-paiement-convenir]');
+      var autres = $$('input[name=paiement]').filter(function (r) { return !r.disabled && r.value !== 'retrait' && r.value !== 'aconvenir'; });
+      if (optRetrait) {
+        optRetrait.classList.toggle('disabled', !retrait);
+        var radio = $('input', optRetrait);
+        radio.disabled = !retrait;
+        if (!retrait && radio.checked) radio.checked = false;
+      }
+      // « À convenir » n'apparaît que s'il n'y a aucun autre choix possible
+      if (optConvenir) {
+        var seul = !autres.length && !(optRetrait && retrait);
+        optConvenir.hidden = !seul;
+        $('input', optConvenir).disabled = !seul;
+        if (!seul && $('input', optConvenir).checked) $('input', optConvenir).checked = false;
+      }
+      if (!form.querySelector('input[name=paiement]:checked')) {
+        var dispo = $$('input[name=paiement]').filter(function (r) { return !r.disabled && !r.closest('[hidden]'); })[0];
+        if (dispo) dispo.checked = true;
+      }
     }
 
     zonePanier.addEventListener('click', function (e) {
@@ -251,7 +266,7 @@ if (typeof BOUTIQUE === 'undefined') {
       var aDevis = panier.some(function (i) { return i.prix == null; });
       var liv = livraisonChoisie(sousTotal);
       var ref = 'LML-' + Date.now().toString(36).toUpperCase().slice(-6);
-      var paiements = { virement: 'Virement bancaire', retrait: 'Paiement à la remise en main propre', carte: 'Carte bancaire (lien de paiement)' };
+      var paiements = { virement: 'Virement bancaire', retrait: 'Paiement à la remise en main propre', carte: 'Carte bancaire (lien de paiement)', aconvenir: 'À convenir ensemble' };
       var lignes = [
         'Bonjour ' + BOUTIQUE.nom + ' ! Je souhaite passer commande :',
         '',
@@ -308,6 +323,7 @@ if (typeof BOUTIQUE === 'undefined') {
       if (c.paiement === 'virement') instructions = '<div class="box"><h3>Paiement par virement</h3><p>Après confirmation de notre part, merci de virer <strong>' + euros(c.total) + '</strong> en indiquant la référence <strong>' + esc(c.ref) + '</strong>.</p><p>Titulaire : ' + esc(b.titulaire) + '<br>IBAN : ' + esc(b.iban) + '<br>BIC : ' + esc(b.bic) + '</p></div>';
       else if (c.paiement === 'carte' && BOUTIQUE.carte.actif && BOUTIQUE.carte.lien) instructions = '<div class="box"><h3>Paiement par carte</h3><p>Réglez <strong>' + euros(c.total) + '</strong> en toute sécurité :</p><a class="btn" target="_blank" rel="noopener" href="' + esc(BOUTIQUE.carte.lien) + '">Payer par carte</a></div>';
       else if (c.paiement === 'carte') instructions = '<div class="box"><p>Je vous envoie très vite un <strong>lien de paiement sécurisé par carte</strong> de ' + euros(c.total) + '.</p></div>';
+      else if (c.paiement === 'aconvenir') instructions = '<div class="box"><p>Je vous indique très vite comment régler <strong>' + euros(c.total) + '</strong>, dès la confirmation de votre commande.</p></div>';
       else instructions = '<div class="box"><p>Vous réglerez <strong>' + euros(c.total) + "</strong> lors de la remise en main propre. Je vous contacte pour convenir du lieu et de la date.</p></div>";
       var z = $('[data-confirmation]');
       z.innerHTML = '<div class="confirm"><div class="confirm-icon"><svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg></div>' +

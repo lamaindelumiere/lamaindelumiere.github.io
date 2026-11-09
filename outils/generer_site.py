@@ -570,6 +570,69 @@ def fiche(p):
     page(p['page'], p['nom'], corps, 'boutique', p['accroche'])
 
 # ------------------------------------------------------------------ PANIER
+# ---------------------------------------------------------------- MOYENS DE PAIEMENT
+def _lien_valide(x):
+    return str(x or '').strip().startswith('http')
+
+def modes_paiement():
+    """Lit Réglages → « Moyens de paiement proposés sur le site ».
+    Un choix laissé vide garde le fonctionnement d'avant (proposé)."""
+    pm = REG.get('paiements') or {}
+    ancienne_carte = REG.get('carte') or {}
+    lien = str(ancienne_carte.get('lien') or '').strip()
+    vir = (pm.get('virement') or 'oui').strip()
+    rem = (pm.get('remise') or 'oui').strip()
+    carte = (pm.get('carte') or '').strip()
+    if not carte:
+        carte = 'bouton' if (ancienne_carte.get('actif') and _lien_valide(lien)) else 'whatsapp'
+    if carte == 'bouton' and not _lien_valide(lien):
+        print('⚠️  Paiement par carte : « bouton automatique » choisi mais le lien ne commence pas par https:// '
+              '→ remplacé par « j\'envoie un lien par WhatsApp ».')
+        carte = 'whatsapp'
+    return dict(virement=vir == 'oui', remise=rem == 'oui', carte=carte, lien=lien if carte == 'bouton' else '')
+
+MODES = modes_paiement()
+
+def html_paiements():
+    m = MODES
+    blocs, premier = [], [True]
+    def coche():
+        if premier[0]:
+            premier[0] = False
+            return ' checked'
+        return ''
+    if m['virement']:
+        blocs.append(f'''              <label class="option"><input type="radio" name="paiement" value="virement"{coche()}>
+                <span class="option-body"><strong>Virement bancaire</strong><small>Coordonnées communiquées après confirmation de la commande</small></span></label>''')
+    if m['carte'] in ('whatsapp', 'bouton'):
+        desc = 'Paiement sécurisé en ligne après envoi de la commande' if m['carte'] == 'bouton' else 'Je vous envoie un lien de paiement sécurisé'
+        blocs.append(f'''              <label class="option"><input type="radio" name="paiement" value="carte"{coche()}>
+                <span class="option-body"><strong>Carte bancaire</strong><small>{desc}</small></span>
+                <span class="option-price">{ICON['lock']}</span></label>''')
+    elif m['carte'] == 'bientot':
+        blocs.append(f'''              <label class="option disabled" aria-disabled="true"><input type="radio" name="paiement" value="carte" disabled>
+                <span class="option-body"><strong>Carte bancaire</strong><small>Bientôt disponible</small></span>
+                <span class="option-price">{ICON['lock']}</span></label>''')
+    if m['remise']:
+        blocs.append('''              <label class="option" data-paiement-retrait><input type="radio" name="paiement" value="retrait">
+                <span class="option-body"><strong>Paiement à la remise</strong><small>Espèces ou carte, lors de la remise en main propre</small></span></label>''')
+    # Toujours un choix possible, même si tout est masqué ou si seule la remise est proposée
+    autres = m['virement'] or m['carte'] in ('whatsapp', 'bouton')
+    blocs.append(f'''              <label class="option" data-paiement-convenir{'' if not autres else ' hidden'}><input type="radio" name="paiement" value="aconvenir"{coche() if not autres else ''}>
+                <span class="option-body"><strong>À convenir ensemble</strong><small>Je vous indique comment régler après confirmation de la commande</small></span></label>''')
+    return '\n'.join(blocs)
+
+def texte_cgv_paiement():
+    m = MODES
+    moyens = []
+    if m['virement']: moyens.append('par virement bancaire')
+    if m['carte'] in ('whatsapp', 'bouton'): moyens.append('par carte bancaire via un lien de paiement sécurisé')
+    if m['remise']: moyens.append('lors de la remise en main propre')
+    if not moyens:
+        return "Les modalités de paiement sont communiquées au client lors de la confirmation de sa commande."
+    phrase = moyens[0] if len(moyens) == 1 else ', '.join(moyens[:-1]) + ' ou ' + moyens[-1]
+    return "Le paiement s'effectue " + phrase + "."
+
 def panier():
     corps = f'''
     <section class="page-head"><div class="container"><span class="script">Votre panier</span><h1>Finaliser ma commande</h1>{ORN}</div></section>
@@ -621,13 +684,7 @@ def panier():
           <fieldset>
             <legend>Paiement souhaité</legend>
             <div class="options">
-              <label class="option"><input type="radio" name="paiement" value="virement" checked>
-                <span class="option-body"><strong>Virement bancaire</strong><small>Coordonnées communiquées après confirmation de la commande</small></span></label>
-              <label class="option"><input type="radio" name="paiement" value="carte">
-                <span class="option-body"><strong>Carte bancaire</strong><small data-carte-desc>Je vous envoie un lien de paiement sécurisé</small></span>
-                <span class="option-price">{ICON['lock']}</span></label>
-              <label class="option" data-paiement-retrait><input type="radio" name="paiement" value="retrait">
-                <span class="option-body"><strong>Paiement à la remise</strong><small>Espèces ou carte, lors de la remise en main propre</small></span></label>
+{html_paiements()}
             </div>
           </fieldset>
 
@@ -753,7 +810,7 @@ def legales():
       <h3>1. Objet</h3><p>Les présentes conditions régissent les ventes de chapelets et fournitures réalisées par {e(NOM)}.</p>
       <h3>2. Prix</h3><p>Les prix sont indiqués en euros, hors frais de livraison. Les articles « sur devis » font l'objet d'un prix confirmé par message avant toute validation.</p>
       <h3>3. Commande</h3><p>La commande est transmise par WhatsApp ou par e-mail. Elle devient ferme après confirmation par {e(NOM)} et réception du paiement.</p>
-      <h3>4. Paiement</h3><p>Le paiement s'effectue par virement bancaire, par carte bancaire via un lien de paiement sécurisé, ou lors de la remise en main propre.</p>
+      <h3>4. Paiement</h3><p>{texte_cgv_paiement()}</p>
       <h3>5. Création et livraison</h3><p>Les créations sont réalisées à la main, sur commande. Voir la page <a href="livraison.html">Délais &amp; livraison</a>.</p>
       <h3>6. Droit de rétractation</h3><p>Le droit de rétractation de 14 jours s'applique aux articles non personnalisés. Il ne s'applique pas aux biens confectionnés selon les spécifications du client ou nettement personnalisés (art. L221-28 du Code de la consommation).</p>
       <h3>7. Données personnelles</h3><p>Vos données sont uniquement utilisées pour le traitement de vos commandes et ne sont jamais revendues.</p>''')
@@ -787,7 +844,8 @@ def ecrire_reglages_js():
                       telephone=exp.get('telephone') or TEL, slogan=METIER)
     config = dict(nom=NOM, whatsapp=WA, email=EMAIL, instagram=INSTA, telephone=TEL, expediteur=expediteur, livraisons=LIVRAISONS,
                   virement=dict(titulaire=vir.get('titulaire') or NOM, iban=vir.get('iban') or '', bic=vir.get('bic') or ''),
-                  carte=dict(actif=bool(carte.get('actif') and carte.get('lien')), lien=carte.get('lien') or ''))
+                  carte=dict(actif=MODES['carte'] == 'bouton', lien=MODES['lien']),
+                  paiements=dict(virement=MODES['virement'], carte=MODES['carte'], remise=MODES['remise']))
     os.makedirs(os.path.join(OUT, 'assets', 'js'), exist_ok=True)
     with open(os.path.join(OUT, 'assets', 'js', 'reglages.js'), 'w', encoding='utf-8') as f:
         f.write('/* Fichier fabriqué automatiquement à partir de contenu/reglages.json — ne pas modifier ici :\n'

@@ -69,7 +69,7 @@ Dans l'espace admin, le menu contient :
 | 🛍️ **Produits** | Changer un prix, une photo, un texte · ajouter / masquer / supprimer un produit · modifier les choix proposés (couleurs, médailles…) |
 | 🖼️ **Accueil & page « La créatrice »** | Grande photo d'accueil, citations, votre photo, votre histoire |
 | 📷 **Mes réalisations** | Ajouter des photos de vos créations (la page « Réalisations » apparaît dans le menu du site dès la 1ʳᵉ photo) |
-| ⚙️ **Réglages de la boutique** | WhatsApp, e-mail, Instagram, délai, **modes et prix de livraison**, **IBAN / BIC**, paiement par carte, mentions légales |
+| ⚙️ **Réglages de la boutique** | WhatsApp, e-mail, Instagram, délai, **modes et prix de livraison**, **moyens de paiement proposés**, **IBAN / BIC**, adresse d'expéditeur, mentions légales |
 | **Media** | Toutes vos photos (envoyer, supprimer) |
 
 **Après chaque modification, cliquez sur `Save` (Enregistrer).** Le site en ligne est mis à jour **1 à 2 minutes** plus tard (actualisez la page du site).
@@ -102,6 +102,23 @@ Champ **Ordre d'affichage** : 10, 20, 30… Le plus petit apparaît en premier. 
 
 ### 🚚 Modifier la livraison, l'e-mail, l'IBAN
 ⚙️ Réglages de la boutique → modifiez → **Save**. Les prix de livraison sont mis à jour partout (panier, fiches produits, page Livraison).
+
+---
+
+## 💳 Choisir les moyens de paiement proposés
+
+Espace admin → ⚙️ Réglages de la boutique → **💳 Moyens de paiement proposés sur le site** :
+
+| Moyen | Choix possibles |
+|---|---|
+| Virement bancaire | ✅ Proposé · ⛔ Masqué |
+| Carte bancaire | ✅ j'envoie moi-même un lien de paiement (WhatsApp) · ✅ bouton « Payer par carte » automatique · ⏳ affiché grisé « Bientôt disponible » · ⛔ Masqué |
+| Paiement à la remise | ✅ Proposé (seulement si le client choisit la remise en main propre) · ⛔ Masqué |
+
+Cliquez sur **Save** : le site est à jour environ 1 minute plus tard. Les conditions générales de vente s'adaptent toutes seules.
+
+- Si vous masquez tout, le client voit « À convenir ensemble » et vous lui indiquez comment payer.
+- Le « bouton automatique » ne fonctionne qu'avec un lien commençant par `https://`, à mettre dans **Lien du bouton « Payer par carte »**. Sans lien valable, le site revient à « j'envoie moi-même un lien ».
 
 ---
 

@@ -45,7 +45,7 @@
   "paiements": {
     "virement": "non",
     "carte": "non",
-    "remise": "oui"
+    "remise": "non"
   },
   "virement": {
     "titulaire": "C/C EUROCOMPTE JEUNE MLE NOLANE DERRICK ",

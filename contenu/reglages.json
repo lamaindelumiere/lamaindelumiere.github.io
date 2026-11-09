@@ -42,13 +42,17 @@
     "territoire": "Guadeloupe",
     "telephone": "+590 690 60 12 72"
   },
+  "paiements": {
+    "virement": "non",
+    "carte": "non",
+    "remise": "oui"
+  },
   "virement": {
     "titulaire": "C/C EUROCOMPTE JEUNE MLE NOLANE DERRICK",
     "iban": "FR76 1027 8053 4000 0206 8940 344",
     "bic": "CMCIFR2A"
   },
   "carte": {
-    "actif": false,
     "lien": "En cours de création "
   },
   "legal": {

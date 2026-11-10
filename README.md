@@ -114,6 +114,7 @@ Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes
 - **occasion** : un décor différent (baptême, communion, confirmation, mariage, ordination, intentions de prière, pèlerinage, fête, cadeau).
 
 - **médaille** : la vraie médaille choisie apparaît (Vierge Marie, Vierge Miraculeuse, Sacré-Cœur de Jésus, Saint Michel Archange). Pour « Autre », une médaille à croix. Si vous ajoutez une médaille dans votre liste, elle est reconnue par son nom (« Vierge », « Marie », « Notre-Dame », « Cœur », « Michel ») ; sinon la médaille à croix s'affiche.
+- **prénom en perles-lettres** : le prénom tapé par le client s'affiche en cubes blancs à lettres dorées (ou argentées), entre deux petits cœurs, en haut du chapelet, comme sur le chapelet « MILENY ». Le site lit le champ dont le nom contient « prénom » ou « lettre ». Il affiche le texte s'il ressemble à un prénom (2 mots au maximum, 12 lettres au maximum). Si le client écrit une phrase, il peut taper « Prénom : Lucas, … » et seul « LUCAS » s'affiche.
 
 La croix de l'aperçu est un exemple.
 

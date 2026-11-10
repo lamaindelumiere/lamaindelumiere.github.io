@@ -23,6 +23,19 @@
   var chFinition = champ(/finition|metal|maillon|croix/);
   var chMedaille = champ(/medaille/);
   var chOccasion = champ(/occasion|evenement|celebration/);
+  var chPrenom = champ(/prenom|lettre/);
+
+  // Prénom à écrire en perles-lettres (extrait du champ « Prénom ou demande particulière »)
+  function prenomDe(v) {
+    v = String(v || '').trim();
+    if (!v) return '';
+    var m = v.match(/pr[ée]nom\s*[:=\-]?\s*([A-Za-zÀ-ÖØ-öø-ÿ' \-]{1,20})/i);
+    var nom = m ? m[1] : v;
+    nom = nom.trim();
+    // seulement si cela ressemble à un prénom (pas une phrase)
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ' \-]{1,14}$/.test(nom) || nom.split(/\s+/).length > 2) return '';
+    return nom.toUpperCase().replace(/\s+/g, ' ').slice(0, 12);
+  }
 
   // ------------------------------------------------------------ COULEURS DES PERLES
   var TEINTES = [ // [motif reconnu dans le nom, couleur]
@@ -62,6 +75,93 @@
   }
   // Emplacement de la médaille sur la photo du chapelet (en pixels du calque)
   var MEDAILLE = { cx: 463.8, cy: 484.4, h: 119, rot: 11.4 };
+
+  // Perles-lettres : posées sur l'arc du haut du chapelet (centres des perles, en pixels du calque)
+  var ARC = [[42, 242], [69, 190], [112, 133], [153, 99], [199, 72], [250, 45], [306, 34], [365, 31], [423, 37], [484, 51], [544, 79], [588, 120], [620, 170], [633, 226]];
+  var RAYON_PERLE = 18, CUBE = 36, COEUR = 28, ECART_L = 1.5;
+  var ARC_ECH = (function () { // courbe lissée (Catmull-Rom) passant par les perles
+    var pts = [], noeuds = [], n = ARC.length, PAS = 30;
+    for (var i = 0; i < n - 1; i++) {
+      var p0 = ARC[Math.max(i - 1, 0)], p1 = ARC[i], p2 = ARC[i + 1], p3 = ARC[Math.min(i + 2, n - 1)];
+      noeuds.push(pts.length);
+      for (var k = 0; k < PAS; k++) {
+        var t = k / PAS, t2 = t * t, t3 = t2 * t;
+        pts.push([0, 1].map(function (j) {
+          return 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3);
+        }));
+      }
+    }
+    noeuds.push(pts.length); pts.push(ARC[n - 1].slice());
+    var L = [0];
+    for (i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+    return { pts: pts, L: L, noeudsS: noeuds.map(function (k) { return L[k]; }) };
+  })();
+  function surArc(sv) {
+    var L = ARC_ECH.L, P = ARC_ECH.pts, i = 1;
+    while (i < L.length - 1 && L[i] < sv) i++;
+    var a = P[i - 1], b = P[i], t = (sv - L[i - 1]) / ((L[i] - L[i - 1]) || 1);
+    return { x: a[0] + (b[0] - a[0]) * t, y: a[1] + (b[1] - a[1]) * t, ang: Math.atan2(b[1] - a[1], b[0] - a[0]) };
+  }
+  function placerLettres(prenom) {
+    var items = [{ type: 'coeur' }];
+    Array.from(prenom).forEach(function (c) { items.push(c === ' ' ? { type: 'espace' } : { type: 'lettre', c: c }); });
+    items.push({ type: 'coeur' });
+    items.forEach(function (it) { it.t = it.type === 'lettre' ? CUBE : it.type === 'coeur' ? COEUR : CUBE * 0.45; });
+    var total = items.reduce(function (s, it) { return s + it.t + ECART_L; }, -ECART_L);
+    // centre du prénom : sommet de l'arc
+    var sc = 0, best = 1e9;
+    ARC_ECH.pts.forEach(function (p, i) { var d = Math.abs(p[0] - 336); if (d < best) { best = d; sc = ARC_ECH.L[i]; } });
+    var s0 = sc - total / 2, sv = s0;
+    items.forEach(function (it) { var q = surArc(sv + it.t / 2); it.x = q.x; it.y = q.y; it.ang = q.ang; sv += it.t + ECART_L; });
+    var effacer = ARC.filter(function (p, i) { var ns = ARC_ECH.noeudsS[i]; return ns > s0 - 6 && ns < sv + 6; }); // perles entièrement remplacées par les lettres
+    return { items: items, effacer: effacer };
+  }
+  function cheminCoeur(x, t) {
+    var k = t / 24;
+    x.beginPath();
+    x.moveTo(0, 9 * k);
+    x.bezierCurveTo(-11 * k, 1 * k, -12 * k, -9 * k, -5.5 * k, -10 * k);
+    x.bezierCurveTo(-2.5 * k, -10.5 * k, -0.6 * k, -8.5 * k, 0, -6 * k);
+    x.bezierCurveTo(0.6 * k, -8.5 * k, 2.5 * k, -10.5 * k, 5.5 * k, -10 * k);
+    x.bezierCurveTo(12 * k, -9 * k, 11 * k, 1 * k, 0, 9 * k);
+    x.closePath();
+  }
+  function dessinerLettres(x, items, metal) {
+    var M = metal === 'argent' ? ['#ffffff', '#cfd4da', '#858c95', '#4d535b'] : ['#fff4c7', '#e6be5a', '#a9781f', '#6b4a10'];
+    items.forEach(function (it) {
+      if (it.type === 'espace') return;
+      x.save();
+      x.translate(it.x, it.y); x.rotate(it.ang);
+      if (it.type === 'coeur') {
+        var g = x.createRadialGradient(-4, -5, 1, 0, 0, it.t * 0.6);
+        g.addColorStop(0, M[0]); g.addColorStop(0.45, M[1]); g.addColorStop(1, M[2]);
+        cheminCoeur(x, it.t); x.fillStyle = g; x.fill();
+        x.lineWidth = 0.8; x.strokeStyle = M[3]; x.globalAlpha = 0.6; x.stroke();
+      } else {
+        var c = CUBE, r = 6;
+        var gb = x.createLinearGradient(-c / 2, -c / 2, c / 2, c / 2);
+        gb.addColorStop(0, '#ffffff'); gb.addColorStop(0.55, '#f6f4ef'); gb.addColorStop(1, '#d9d5cc');
+        x.beginPath();
+        x.moveTo(-c / 2 + r, -c / 2); x.arcTo(c / 2, -c / 2, c / 2, c / 2, r); x.arcTo(c / 2, c / 2, -c / 2, c / 2, r);
+        x.arcTo(-c / 2, c / 2, -c / 2, -c / 2, r); x.arcTo(-c / 2, -c / 2, c / 2, -c / 2, r); x.closePath();
+        x.fillStyle = gb; x.fill();
+        x.lineWidth = 0.8; x.strokeStyle = 'rgba(90, 75, 50, .28)'; x.stroke();
+        // reflet sur l'arête haute
+        x.beginPath(); x.moveTo(-c / 2 + r, -c / 2 + 1.5); x.lineTo(c / 2 - r, -c / 2 + 1.5);
+        x.strokeStyle = 'rgba(255,255,255,.9)'; x.lineWidth = 1.4; x.stroke();
+        // lettre dorée / argentée en relief
+        var gl = x.createLinearGradient(0, -c * 0.32, 0, c * 0.32);
+        var LT = metal === 'argent' ? ['#aeb5be', '#6b727b', '#3f444b'] : [M[1], M[2], M[3]];
+        gl.addColorStop(0, LT[0]); gl.addColorStop(0.5, LT[1]); gl.addColorStop(1, LT[2]);
+        x.font = '800 ' + Math.round(c * 0.62) + 'px "Nunito Sans", "Helvetica Neue", Arial, sans-serif';
+        x.textAlign = 'center'; x.textBaseline = 'middle';
+        x.fillStyle = 'rgba(0,0,0,.18)'; x.fillText(it.c, 0.6, 1.8);
+        x.fillStyle = gl; x.fillText(it.c, 0, 1.2);
+        x.lineWidth = 0.5; x.strokeStyle = M[3]; x.globalAlpha = 0.45; x.strokeText(it.c, 0, 1.2);
+      }
+      x.restore();
+    });
+  }
 
   function metalChoisi(nom) { return /argent|acier|silver/.test(norm(nom)) ? 'argent' : 'or'; }
 
@@ -145,14 +245,38 @@
     return t;
   }
 
-  function chapelet(C, sp, metal, med, miroir) {
+  function chapelet(C, sp, metal, med, miroir, prenom) {
     var w = C.ombrage.width, h = C.ombrage.height;
+    // 1) chapelet dans le sens de la photo : métal + perles (moins celles remplacées par les lettres)
+    var base = toile(w, h), bx = base.getContext('2d');
+    bx.drawImage(metal === 'argent' ? C.argent : C.or, 0, 0);
+    var perles = perlesColorees(C, sp);
+    var lettres = prenom ? placerLettres(prenom) : null;
+    if (lettres) {
+      var pxx = perles.getContext('2d');
+      pxx.globalAlpha = 1; // effacement complet
+      pxx.globalCompositeOperation = 'destination-out';
+      lettres.effacer.forEach(function (p) { pxx.beginPath(); pxx.arc(p[0], p[1], RAYON_PERLE + 3, 0, 2 * Math.PI); pxx.fill(); });
+    }
+    bx.globalAlpha = sp.type === 'cristal' ? 0.62 : 1;
+    bx.drawImage(perles, 0, 0);
+    // 2) retourné si le décor le demande, puis médaille et lettres (jamais à l'envers)
     var t = toile(w, h), x = t.getContext('2d');
-    if (miroir) { x.translate(w, 0); x.scale(-1, 1); } // chapelet retourné selon le décor
-    x.drawImage(metal === 'argent' ? C.argent : C.or, 0, 0);
-    x.globalAlpha = sp.type === 'cristal' ? 0.62 : 1;
-    x.drawImage(perlesColorees(C, sp), 0, 0);
+    if (miroir) { x.translate(w, 0); x.scale(-1, 1); }
+    x.drawImage(base, 0, 0);
     x.setTransform(1, 0, 0, 1, 0, 0);
+    if (lettres) {
+      var items = lettres.items.map(function (it) {
+        var c = Object.assign({}, it);
+        if (miroir) { c.x = w - it.x; c.ang = -it.ang; }
+        return c;
+      });
+      if (miroir) { // on garde le sens de lecture de gauche à droite
+        var pos = items.map(function (it) { return { x: it.x, y: it.y, ang: it.ang }; }).reverse();
+        items = items.map(function (it, i) { return Object.assign(it, pos[i]); });
+      }
+      dessinerLettres(x, items, metal);
+    }
     x.globalAlpha = 1;
     if (med) { // médaille choisie, posée (avec la même inclinaison) à la place de celle de la photo
       var mh = MEDAILLE.h, mw = mh * med.width / med.height;
@@ -170,6 +294,7 @@
     var metal = metalChoisi(chFinition ? chFinition.value : '');
     var decor = decorPour(chOccasion ? chOccasion.value : '');
     var nomMed = medaillePour(chMedaille ? chMedaille.value : '');
+    var prenom = chPrenom ? prenomDe(chPrenom.value) : '';
     var n = ++jeton;
     titre.textContent = decor.titre;
     titre.style.color = decor.couleur;
@@ -187,7 +312,7 @@
       x.fillStyle = g; x.fillRect(0, 0, W, 200);
       // chapelet posé avec son ombre portée
       var pose = decor.pose || {};
-      var ch = chapelet(C, sp, metal, r[2], !!pose.miroir);
+      var ch = chapelet(C, sp, metal, r[2], !!pose.miroir, prenom);
       // position du chapelet dans le décor (réglable par décor : pose { h, cx, y, miroir })
       var hh = pose.h || 630, ww = hh * ch.width / ch.height;
       var px = (pose.cx != null ? pose.cx : 390) - ww / 2, py = pose.y != null ? pose.y : 100;
@@ -203,6 +328,7 @@
     var morceaux = ['<span>Perles : <strong>' + esc(chPerles.value || 'à choisir') + '</strong></span>'];
     if (chFinition) morceaux.push('<span>Finition : <strong>' + esc(chFinition.value || 'à choisir') + '</strong></span>');
     if (chMedaille) morceaux.push('<span>Médaille : <strong>' + esc(chMedaille.value || 'à choisir') + '</strong></span>');
+    if (prenom) morceaux.push('<span>Prénom : <strong>' + esc(prenom) + '</strong></span>');
     if (chOccasion && chOccasion.value) morceaux.push('<span>Occasion : <strong>' + esc(chOccasion.value) + '</strong></span>');
     recap.innerHTML = morceaux.join('') + (sp.inconnu && chPerles.value ? '<em>Couleur à préciser : l\'aperçu montre des perles nacrées.</em>' : '');
   }
@@ -244,6 +370,17 @@
   [chPerles, chFinition, chMedaille, chOccasion].forEach(function (c) {
     if (c) c.addEventListener('change', function () { montrer('apercu'); });
   });
+  if (chPrenom) {
+    var minuteur;
+    chPrenom.addEventListener('input', function () {
+      clearTimeout(minuteur);
+      minuteur = setTimeout(function () { montrer('apercu'); }, 250);
+    });
+    var aide = document.createElement('small');
+    aide.className = 'apercu-aide';
+    aide.textContent = '✨ Votre prénom s\'affiche en perles-lettres sur l\'aperçu (12 lettres maximum).';
+    chPrenom.insertAdjacentElement('afterend', aide);
+  }
 
   // Sur téléphone : petite vignette flottante quand l'aperçu est sorti de l'écran
   var mini = document.createElement('button');

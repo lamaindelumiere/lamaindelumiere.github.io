@@ -478,3 +478,4 @@ section.prose { padding-bottom: 70px; }
 .apercu-mini img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 42px 42px 9px 9px; }
 .apercu-mini span { display: block; font-size: .68rem; font-weight: 700; color: var(--gold-dark); text-align: center; padding-top: 2px; }
 @media (min-width: 901px) { .apercu-mini { display: none !important; } }
+.apercu-aide { display: block; margin-top: 6px; font-weight: 400; font-size: .8rem; color: var(--gold-dark); }

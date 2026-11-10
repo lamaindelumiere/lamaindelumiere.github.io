@@ -382,6 +382,13 @@ section.prose { padding-bottom: 70px; }
 .flash-error { background: #fbeceb; color: #8f3a33; border: 1px solid #f0d3d0; }
 .commande-outil { padding-bottom: 70px; }
 .commande-outil textarea { width: 100%; margin: 8px 0 14px; }
+.confirm-client { background: #fffdf8; border: 1px solid var(--gold-light, #d9c08a); border-radius: 18px; padding: 20px 22px; margin: 10px 0 22px; box-shadow: var(--shadow); }
+.confirm-client h2 { font-size: 1.35rem; margin: 0 0 6px; }
+.confirm-client .cc-label { display: block; font-weight: 600; font-size: .9rem; margin: 12px 0 4px; }
+.confirm-client input[type=text], .confirm-client textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--gold-pale); border-radius: 12px; font: inherit; font-size: .95rem; background: #fff; }
+.confirm-client textarea { margin: 0 0 14px; line-height: 1.5; resize: vertical; }
+.confirm-client .doc-actions { margin-bottom: 6px; }
+.confirm-client [hidden] { display: none !important; }
 .doc-barre { background: #fff; border: 1px solid var(--gold-pale); border-radius: 18px; padding: 18px 22px; margin: 10px 0 26px; }
 .doc-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 14px; }
 .doc-options { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; margin-bottom: 8px; }

@@ -114,6 +114,115 @@
       '<div class="et-marque">' + esc(B.nom) + ' · Fait main avec amour et foi</div>';
   }
 
+  // ------------------------------------------------------------ CONFIRMATION AU CLIENT
+  // Numéro du client au format WhatsApp international (Antilles-Guyane, Réunion, métropole).
+  function numeroWhatsApp(tel) {
+    var t = String(tel || '').replace(/[^\d+]/g, '');
+    if (!t) return '';
+    if (t.indexOf('+') === 0) return t.slice(1);
+    if (t.indexOf('00') === 0) return t.slice(2);
+    if (t.charAt(0) !== '0' || t.length !== 10) return t;
+    var n = t.slice(1);
+    var prefixes = { '690': '590', '691': '590', '590': '590', '696': '596', '697': '596', '596': '596',
+                     '694': '594', '594': '594', '692': '262', '693': '262', '262': '262', '639': '262', '269': '262' };
+    return (prefixes[n.slice(0, 3)] || '33') + n;
+  }
+
+  function messageConfirmation(c) {
+    var cl = c.c || {};
+    var liv = c.l || ['', 0, 0];
+    var retrait = !!liv[2];
+    var sousTotal = 0, devis = false;
+    var L = [];
+    L.push('Bonjour ' + (cl.n || '') + ',', '');
+    L.push('Merci infiniment pour votre commande et pour votre confiance ! 🙏');
+    L.push('Nous avons bien reçu votre commande n° ' + c.r + ' et elle est prise en compte : nous la traitons dès maintenant, avec tout notre soin. Chaque chapelet est créé à la main, avec amour et foi.', '');
+    L.push('— Récapitulatif de votre commande —');
+    (c.i || []).forEach(function (it) {
+      var nom = it[0], qte = it[1], pu = it[2], opts = it[3] || [];
+      if (pu == null) devis = true; else sousTotal += pu * qte;
+      L.push('• ' + qte + ' × ' + nom + ' — ' + (pu == null ? 'sur devis' : euros(pu * qte)));
+      opts.forEach(function (o) { L.push('    ↳ ' + o[0] + ' : ' + o[1]); });
+    });
+    var total = sousTotal + (liv[1] || 0);
+    L.push('');
+    L.push('Sous-total : ' + euros(sousTotal) + (devis ? ' (+ articles sur devis)' : ''));
+    L.push('Livraison : ' + liv[0] + ' (' + (liv[1] ? euros(liv[1]) : 'offerte') + ')');
+    L.push('Total : ' + euros(total) + (devis ? ' + devis à confirmer' : ''), '');
+    if (retrait) L.push('📍 Remise en main propre : nous vous contactons très vite pour convenir ensemble du lieu et de la date.');
+    else L.push('📦 Livraison à : ' + [cl.a, [cl.p, cl.v].filter(Boolean).join(' '), cl.y].filter(Boolean).join(', '));
+    if (c.dc) L.push('🗓️ Date de la célébration : ' + dateLongue(c.dc) + ' : nous l\'avons bien notée et ferons le nécessaire pour que votre commande soit prête à temps.');
+    if (B.delai) L.push('⏳ Délai de création : ' + B.delai + '.');
+    L.push('');
+    var pm = String(c.pm || '');
+    var montant = euros(total) + (devis ? ' (+ devis)' : '');
+    if (/virement/i.test(pm)) {
+      var v = B.virement || {};
+      L.push('💳 Paiement par virement : merci de virer ' + montant + ' en indiquant la référence ' + c.r + '.');
+      L.push('   Titulaire : ' + (v.titulaire || B.nom));
+      if (v.iban) L.push('   IBAN : ' + v.iban);
+      if (v.bic) L.push('   BIC : ' + v.bic);
+    } else if (/carte/i.test(pm)) {
+      if (B.carte && B.carte.actif && B.carte.lien) L.push('💳 Paiement par carte : vous pouvez régler ' + montant + ' en toute sécurité ici : ' + B.carte.lien);
+      else L.push('💳 Paiement par carte : nous vous envoyons très vite un lien de paiement sécurisé de ' + montant + '.');
+    } else if (/remise|main propre/i.test(pm)) {
+      L.push('💶 Paiement : vous réglerez ' + montant + ' lors de la remise en main propre.');
+    } else {
+      L.push('💶 Paiement : nous revenons vers vous très vite pour convenir ensemble du règlement de ' + montant + '.');
+    }
+    if (devis) L.push('Le prix des articles sur devis vous sera communiqué très rapidement.');
+    L.push('');
+    L.push('Nous vous tiendrons informé(e) de chaque étape et vous préviendrons dès que votre commande sera ' + (retrait ? 'prête' : 'expédiée') + '.');
+    L.push('Pour toute question, il vous suffit de répondre à ce message' + (B.telephone ? ' ou de nous écrire sur WhatsApp au ' + B.telephone : '') + '.', '');
+    L.push('Avec toute notre gratitude,');
+    L.push(B.nom || 'La Main de Lumière');
+    L.push((EXP.slogan || 'Créatrice de chapelets') + (B.instagram ? ' · Instagram @' + B.instagram : ''));
+    L.push('« Un chapelet, une prière, une lumière pour chaque étape de la vie… »');
+    return {
+      objet: 'Votre commande ' + c.r + ' est bien enregistrée — ' + (B.nom || 'La Main de Lumière'),
+      texte: L.join('\n')
+    };
+  }
+
+  var zoneCC = $('[data-confirm-client]');
+  function majLiensCC() {
+    if (!zoneCC || !commande) return;
+    var cl = commande.c || {};
+    var objet = $('#cc-objet').value, texte = $('#cc-texte').value;
+    var bEmail = $('[data-cc-email]'), bWa = $('[data-cc-whatsapp]');
+    var num = numeroWhatsApp(cl.t);
+    bEmail.href = 'mailto:' + encodeURIComponent(cl.e || '').replace(/%40/g, '@') + '?subject=' + encodeURIComponent(objet) + '&body=' + encodeURIComponent(texte);
+    bWa.href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(texte);
+    bWa.hidden = !num;
+    var infos = [];
+    if (cl.e) infos.push('E-mail du client : ' + cl.e);
+    else infos.push('⚠️ Le client n\'a pas indiqué d\'e-mail : ajoutez son adresse dans votre messagerie, ou envoyez le message par WhatsApp.');
+    if (num) infos.push('WhatsApp : ' + cl.t);
+    $('[data-cc-info]').textContent = infos.join(' · ');
+  }
+  function remplirCC(c) {
+    if (!zoneCC) return;
+    var client = /vue=client/.test(location.hash) || c === MODELE_VIDE_ACTIF;
+    zoneCC.hidden = client;
+    if (client) return;
+    var m = messageConfirmation(c);
+    $('#cc-objet').value = m.objet;
+    $('#cc-texte').value = m.texte;
+    majLiensCC();
+  }
+  var MODELE_VIDE_ACTIF = null;
+  if (zoneCC) {
+    $('#cc-objet').addEventListener('input', majLiensCC);
+    $('#cc-texte').addEventListener('input', majLiensCC);
+    $('[data-cc-reset]').addEventListener('click', function () { if (commande) remplirCC(commande); });
+    $('[data-cc-copier]').addEventListener('click', function () {
+      var t = $('#cc-texte'), btn = this;
+      function ok() { btn.textContent = '✅ Message copié'; setTimeout(function () { btn.textContent = '📋 Copier le message'; }, 2500); }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(ok, function () { t.select(); document.execCommand('copy'); ok(); });
+      else { t.select(); document.execCommand('copy'); ok(); }
+    });
+  }
+
   function rendre() {
     if (!commande) return;
     rendreBon(commande);
@@ -127,6 +236,7 @@
     zoneChargement.hidden = true;
     zoneDocs.hidden = false;
     rendre();
+    remplirCC(c);
   }
 
   // ------------------------------------------------------------ IMPRESSION
@@ -153,6 +263,7 @@
   $('#opt-fragile').addEventListener('change', rendre);
   $('[data-autre-commande]').addEventListener('click', function () {
     history.replaceState(null, '', location.pathname);
+    MODELE_VIDE_ACTIF = null;
     commande = null; zoneDocs.hidden = true; zoneChargement.hidden = false;
     $('#coller').value = ''; $('#coller').focus();
   });
@@ -167,7 +278,7 @@
       err.hidden = false;
     }
   });
-  $('[data-vierge]').addEventListener('click', function () { afficher(JSON.parse(JSON.stringify(MODELE_VIDE))); });
+  $('[data-vierge]').addEventListener('click', function () { MODELE_VIDE_ACTIF = JSON.parse(JSON.stringify(MODELE_VIDE)); afficher(MODELE_VIDE_ACTIF); });
 
   // Chargement automatique depuis le lien de la commande
   try {

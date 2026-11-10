@@ -845,7 +845,7 @@ def ecrire_reglages_js():
     expediteur = dict(nom=exp.get('nom') or NOM, adresse=exp.get('adresse') or '', cp=exp.get('cp') or '',
                       ville=exp.get('ville') or '', territoire=exp.get('territoire') or LIEU,
                       telephone=exp.get('telephone') or TEL, slogan=METIER)
-    config = dict(nom=NOM, whatsapp=WA, email=EMAIL, instagram=INSTA, telephone=TEL, expediteur=expediteur, livraisons=LIVRAISONS,
+    config = dict(nom=NOM, whatsapp=WA, email=EMAIL, instagram=INSTA, telephone=TEL, delai=DELAI, expediteur=expediteur, livraisons=LIVRAISONS,
                   virement=dict(titulaire=vir.get('titulaire') or NOM, iban=vir.get('iban') or '', bic=vir.get('bic') or ''),
                   carte=dict(actif=MODES['carte'] == 'bouton', lien=MODES['lien']),
                   paiements=dict(virement=MODES['virement'], carte=MODES['carte'], remise=MODES['remise']))
@@ -875,6 +875,23 @@ def commande():
       </div>
 
       <div data-documents hidden>
+        <!-- Message de confirmation à envoyer au client -->
+        <div class="confirm-client no-print" data-confirm-client>
+          <h2>✉️ Confirmer la commande au client</h2>
+          <p class="small muted">Un message de remerciement avec le récapitulatif de la commande est prêt ci-dessous. Relisez-le, modifiez-le si besoin, puis envoyez-le au client en un clic.</p>
+          <label class="cc-label" for="cc-objet">Objet de l'e-mail</label>
+          <input type="text" id="cc-objet">
+          <label class="cc-label" for="cc-texte">Message</label>
+          <textarea id="cc-texte" rows="18"></textarea>
+          <div class="doc-actions">
+            <a class="btn" data-cc-email href="#">✉️ Envoyer par e-mail</a>
+            <a class="btn btn-whatsapp" data-cc-whatsapp href="#" target="_blank" rel="noopener">Envoyer par WhatsApp</a>
+            <button type="button" class="btn btn-ghost" data-cc-copier>📋 Copier le message</button>
+            <button type="button" class="link" data-cc-reset>Remettre le message d'origine</button>
+          </div>
+          <p class="small muted" data-cc-info></p>
+        </div>
+
         <div class="doc-barre no-print">
           <div class="doc-actions">
             <button type="button" class="btn" data-imprimer-bon>🖨️ Imprimer le bon de livraison</button>

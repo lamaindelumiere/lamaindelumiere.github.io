@@ -141,6 +141,25 @@ Cliquez sur **Save** : le site est à jour environ 1 minute plus tard. Les condi
 
 ---
 
+## ✉️ Confirmer la commande au client (merci + récapitulatif)
+
+Chaque commande reçue (par e-mail ou WhatsApp) se termine par un lien **« 📄 Récapitulatif imprimable »**. En haut de cette page, un **message de confirmation** est déjà rédigé pour le client :
+
+- des remerciements, et la confirmation que la commande est **prise en compte et traitée rapidement** ;
+- le **récapitulatif complet** : articles et choix de personnalisation, livraison, total ;
+- l'adresse de livraison (ou la remise en main propre), la date de la célébration et votre délai de création ;
+- les **instructions de paiement** selon le mode choisi par le client (avec votre IBAN pour un virement, ou votre lien de paiement par carte).
+
+Pour l'envoyer :
+1. Cliquez sur le lien de la commande.
+2. Relisez le message (vous pouvez modifier l'objet et le texte comme vous voulez).
+3. Cliquez sur **✉️ Envoyer par e-mail** : votre messagerie s'ouvre avec l'adresse du client, l'objet et le message déjà remplis. Il ne reste qu'à appuyer sur **Envoyer**.
+   Ou cliquez sur **Envoyer par WhatsApp** pour l'envoyer sur le WhatsApp du client, ou sur **📋 Copier le message** pour le coller où vous voulez (Instagram, SMS…).
+
+Si le client n'a pas donné d'e-mail, la page vous le signale : utilisez WhatsApp. Le texte du message utilise vos réglages (nom, délai, IBAN, lien carte, téléphone) : mettez-les à jour dans ⚙️ Réglages de la boutique.
+
+Ce bloc n'apparaît pas quand le client ouvre son propre récapitulatif depuis le site.
+
 ## 📦 Bon de livraison & étiquette d'envoi
 
 Chaque commande reçue (WhatsApp ou e-mail) se termine par un lien **« 📄 Récapitulatif imprimable »**.

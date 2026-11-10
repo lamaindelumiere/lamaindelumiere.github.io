@@ -107,7 +107,7 @@ Champ **Ordre d'affichage** : 10, 20, 30… Le plus petit apparaît en premier. 
 
 ## ✨ Aperçu du chapelet personnalisé
 
-Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes choix »** (l'aperçu s'ouvre aussi tout seul dès qu'il fait un choix). Le site assemble en direct une **photo de chapelet** posée sur un **décor photo** :
+Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes choix »** (l'aperçu s'ouvre aussi tout seul dès qu'il fait un choix). Le site assemble en direct une **photo de chapelet**, posée naturellement (boucle souple, croix sur le côté), sur un **décor photo** :
 
 - **couleur des perles** : les perles de la photo sont recolorées. Les couleurs sont reconnues par leur nom (blanc nacré, ivoire, cristal, rose poudré, bleu ciel, doré, multicolore, vert d'eau, lavande, noir…) ;
 - **finition** : croix, maillons et médaille en doré ou en argenté ;
@@ -119,7 +119,7 @@ La croix de l'aperçu est un exemple.
 
 Vous pouvez ajouter des couleurs dans vos listes de choix depuis l'espace admin : si le nom contient une couleur connue (« rose », « bleu », « vert »…), l'aperçu la reconnaît. Une couleur inconnue (ou « Autre ») s'affiche en perles nacrées, avec la mention « couleur à préciser ».
 
-Un aperçu apparaît sur tout produit qui a un choix dont le nom contient « perle ». Les images se trouvent dans `site-html/assets/chapelet/` (le chapelet) et `site-html/assets/scenes/` (les décors).
+Un aperçu apparaît sur tout produit qui a un choix dont le nom contient « perle ». Les images se trouvent dans `site-html/assets/chapelet/` (le chapelet) et `site-html/assets/scenes/` (les décors). La position du chapelet dans chaque décor se règle dans `site-html/assets/js/apercu.js` (réglage `pose` de chaque décor).
 
 ---
 

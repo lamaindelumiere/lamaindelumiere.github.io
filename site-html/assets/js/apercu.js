@@ -26,7 +26,7 @@
 
   // ------------------------------------------------------------ COULEURS DES PERLES
   var TEINTES = [ // [motif reconnu dans le nom, couleur]
-    [/rose (poudre|pale|clair)|poudre/, '#f6c6cf'], [/fuchsia|framboise/, '#d2477e'], [/rose/, '#eea3b5'],
+    [/rose (poudre|pale|clair)|poudre/, '#fcd2d9'], [/fuchsia|framboise/, '#d2477e'], [/rose/, '#eea3b5'],
     [/bordeaux|grenat/, '#7c1f2e'], [/rouge/, '#c8352b'], [/corail|peche|saumon/, '#f5a383'], [/orange/, '#ec8a35'],
     [/jaune|soleil/, '#f3d35a'], [/vert (d.eau|menthe|clair)|menthe|vert d/, '#b3e0cc'], [/olive|kaki/, '#8a8f4a'],
     [/emeraude|vert (fonce|sapin)|sapin/, '#1f7a54'], [/vert/, '#62b07e'], [/turquoise|lagon|caraibe/, '#3cc3c6'],
@@ -53,7 +53,7 @@
   // Médaille choisie → image de la médaille (null = médaille de la photo d'origine)
   function medaillePour(nom) {
     var n = norm(nom);
-    if (!chMedaille || !n) return null;
+    if (!chMedaille || !n) return 'miraculeuse'; // médaille de la photo d'origine
     if (/miracul/.test(n)) return 'miraculeuse';
     if (/coeur|sacre/.test(n)) return 'sacre-coeur';
     if (/michel|archange/.test(n)) return 'saint-michel';
@@ -61,7 +61,7 @@
     return 'croix';
   }
   // Emplacement de la médaille sur la photo du chapelet (en pixels du calque)
-  var MEDAILLE = { cx: 225.5, cy: 491, h: 97 };
+  var MEDAILLE = { cx: 463.8, cy: 484.4, h: 119, rot: 11.4 };
 
   function metalChoisi(nom) { return /argent|acier|silver/.test(norm(nom)) ? 'argent' : 'or'; }
 
@@ -73,7 +73,7 @@
     mariage: { photo: 'mariage', titre: 'Pour un mariage', couleur: '#8a5560' },
     ordination: { photo: 'ordination', titre: 'Pour une ordination', couleur: '#6e5626' },
     priere: { photo: 'priere', titre: 'Pour vos intentions', couleur: '#5f4f7d' },
-    pelerinage: { photo: 'pelerinage', titre: 'Pour un pèlerinage', couleur: '#5e4a2c' },
+    pelerinage: { photo: 'pelerinage', titre: 'Pour un pèlerinage', couleur: '#5e4a2c', pose: { miroir: true, cx: 410 } },
     fete: { photo: 'fete', titre: 'Pour un jour de fête', couleur: '#7d6430' },
     cadeau: { photo: 'cadeau', titre: 'Un cadeau qui a du sens', couleur: '#7d6430' },
     aucun: { photo: 'aucun', titre: 'Créé avec amour', couleur: '#7d6430' }
@@ -145,16 +145,21 @@
     return t;
   }
 
-  function chapelet(C, sp, metal, med) {
+  function chapelet(C, sp, metal, med, miroir) {
     var w = C.ombrage.width, h = C.ombrage.height;
     var t = toile(w, h), x = t.getContext('2d');
+    if (miroir) { x.translate(w, 0); x.scale(-1, 1); } // chapelet retourné selon le décor
     x.drawImage(metal === 'argent' ? C.argent : C.or, 0, 0);
     x.globalAlpha = sp.type === 'cristal' ? 0.62 : 1;
     x.drawImage(perlesColorees(C, sp), 0, 0);
+    x.setTransform(1, 0, 0, 1, 0, 0);
     x.globalAlpha = 1;
-    if (med) { // médaille choisie, posée à la place de celle de la photo
+    if (med) { // médaille choisie, posée (avec la même inclinaison) à la place de celle de la photo
       var mh = MEDAILLE.h, mw = mh * med.width / med.height;
-      x.drawImage(med, MEDAILLE.cx - mw / 2, MEDAILLE.cy - mh / 2, mw, mh);
+      var cx = miroir ? w - MEDAILLE.cx : MEDAILLE.cx, rot = (miroir ? -MEDAILLE.rot : MEDAILLE.rot) * Math.PI / 180;
+      x.translate(cx, MEDAILLE.cy); x.rotate(rot);
+      x.drawImage(med, -mw / 2, -mh / 2, mw, mh);
+      x.setTransform(1, 0, 0, 1, 0, 0);
     }
     return t;
   }
@@ -181,9 +186,11 @@
       g.addColorStop(0, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)');
       x.fillStyle = g; x.fillRect(0, 0, W, 200);
       // chapelet posé avec son ombre portée
-      var ch = chapelet(C, sp, metal, r[2]);
-      var hh = 860, ww = hh * ch.width / ch.height;
-      var px = (W - ww) / 2, py = 100;
+      var pose = decor.pose || {};
+      var ch = chapelet(C, sp, metal, r[2], !!pose.miroir);
+      // position du chapelet dans le décor (réglable par décor : pose { h, cx, y, miroir })
+      var hh = pose.h || 630, ww = hh * ch.width / ch.height;
+      var px = (pose.cx != null ? pose.cx : 390) - ww / 2, py = pose.y != null ? pose.y : 100;
       x.save();
       x.shadowColor = 'rgba(60, 44, 24, .38)'; x.shadowBlur = 9; x.shadowOffsetX = 4; x.shadowOffsetY = 7;
       x.drawImage(ch, px, py, ww, hh);

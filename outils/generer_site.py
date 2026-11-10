@@ -567,7 +567,10 @@ def fiche(p):
       </div>
     </section>
 '''
-    page(p['page'], p['nom'], corps, 'boutique', p['accroche'])
+    # Aperçu dessiné du chapelet si le produit propose une « couleur des perles »
+    apercu = any('perle' in o[0].lower() for o in p['options'])
+    page(p['page'], p['nom'], corps, 'boutique', p['accroche'],
+         extra_scripts='\n  <script src="assets/js/apercu.js"></script>' if apercu else '')
 
 # ------------------------------------------------------------------ PANIER
 # ---------------------------------------------------------------- MOYENS DE PAIEMENT

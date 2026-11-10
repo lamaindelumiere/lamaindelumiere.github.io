@@ -463,10 +463,10 @@ section.prose { padding-bottom: 70px; }
 .apercu-onglets button { border: 0; background: none; font: inherit; font-weight: 700; font-size: .88rem; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: .2s; }
 .apercu-onglets button[aria-selected="true"] { background: var(--gold-grad); color: #fff; box-shadow: 0 6px 14px -8px rgba(154, 114, 50, .9); }
 .apercu-cadre { border-radius: 999px 999px 22px 22px; overflow: hidden; background: #fff; padding: 10px; border: 1px solid var(--gold-pale); box-shadow: var(--shadow); }
-.apercu-svg { border-radius: 999px 999px 14px 14px; overflow: hidden; aspect-ratio: 4/5; }
-.apercu-svg svg { display: block; width: 100%; height: 100%; }
-.apercu-svg svg * { transition: fill .35s ease, stroke .35s ease; }
-.ap-titre { font-family: var(--script); font-size: 26px; }
+.apercu-scene { position: relative; border-radius: 999px 999px 14px 14px; overflow: hidden; aspect-ratio: 4/5; background: #f7efe2; }
+.apercu-scene canvas { display: block; width: 100%; height: 100%; transition: opacity .25s ease; }
+.apercu-scene.charge canvas { opacity: .55; }
+.apercu-titre { position: absolute; left: 0; right: 0; top: 2.6%; text-align: center; font-family: var(--script); font-size: clamp(1.5rem, 3.2vw, 2.1rem); line-height: 1.2; pointer-events: none; text-shadow: 0 1px 8px rgba(255, 255, 255, .9); }
 .apercu-recap { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin: 14px 0 4px; font-size: .9rem; color: var(--muted); }
 .apercu-recap strong { color: var(--ink); }
 .apercu-recap em { flex-basis: 100%; text-align: center; font-size: .82rem; }
@@ -475,7 +475,6 @@ section.prose { padding-bottom: 70px; }
   .apercu { max-width: 520px; margin: 0 auto; }
 }
 .apercu-mini { position: fixed; left: 14px; bottom: 18px; z-index: 60; width: 84px; padding: 4px; border: 1px solid var(--gold-pale); border-radius: 46px 46px 12px 12px; background: #fff; box-shadow: var(--shadow); cursor: pointer; }
-.apercu-mini svg { display: block; width: 100%; height: auto; aspect-ratio: 4/5; border-radius: 42px 42px 9px 9px; }
-.apercu-mini .ap-titre { display: none; }
+.apercu-mini img { display: block; width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 42px 42px 9px 9px; }
 .apercu-mini span { display: block; font-size: .68rem; font-weight: 700; color: var(--gold-dark); text-align: center; padding-top: 2px; }
 @media (min-width: 901px) { .apercu-mini { display: none !important; } }

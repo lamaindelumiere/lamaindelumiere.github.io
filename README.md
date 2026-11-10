@@ -107,16 +107,17 @@ Champ **Ordre d'affichage** : 10, 20, 30… Le plus petit apparaît en premier. 
 
 ## ✨ Aperçu du chapelet personnalisé
 
-Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes choix »** (l'aperçu s'ouvre aussi tout seul dès qu'il fait un choix). Le chapelet est dessiné en direct :
+Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes choix »** (l'aperçu s'ouvre aussi tout seul dès qu'il fait un choix). Le site assemble en direct une **photo de chapelet** posée sur un **décor photo** :
 
-- **couleur des perles** : les couleurs sont reconnues par leur nom (blanc nacré, ivoire, cristal, rose poudré, bleu ciel, doré, multicolore, vert d'eau, lavande, noir…) ;
-- **finition** dorée ou argentée de la croix, des maillons et de la médaille ;
-- **médaille** : Vierge Marie, Vierge Miraculeuse, Sacré-Cœur, Saint Michel (sinon une croix) ;
-- **occasion** : un décor photo différent (baptême, communion, confirmation, mariage, ordination, intentions de prière, pèlerinage, fête, cadeau).
+- **couleur des perles** : les perles de la photo sont recolorées. Les couleurs sont reconnues par leur nom (blanc nacré, ivoire, cristal, rose poudré, bleu ciel, doré, multicolore, vert d'eau, lavande, noir…) ;
+- **finition** : croix, maillons et médaille en doré ou en argenté ;
+- **occasion** : un décor différent (baptême, communion, confirmation, mariage, ordination, intentions de prière, pèlerinage, fête, cadeau).
+
+La médaille et la croix de l'aperçu sont des exemples ; le choix de médaille du client est rappelé sous l'image.
 
 Vous pouvez ajouter des couleurs dans vos listes de choix depuis l'espace admin : si le nom contient une couleur connue (« rose », « bleu », « vert »…), l'aperçu la reconnaît. Une couleur inconnue (ou « Autre ») s'affiche en perles nacrées, avec la mention « couleur à préciser ».
 
-Un aperçu apparaît sur tout produit qui a un choix dont le nom contient « perle ».
+Un aperçu apparaît sur tout produit qui a un choix dont le nom contient « perle ». Les images se trouvent dans `site-html/assets/chapelet/` (le chapelet) et `site-html/assets/scenes/` (les décors).
 
 ---
 

@@ -50,6 +50,19 @@
     if (/blanc/.test(n)) return { type: 'couleur', c: '#fbfaf6' };
     return { type: 'nacre', inconnu: true };
   }
+  // Médaille choisie → image de la médaille (null = médaille de la photo d'origine)
+  function medaillePour(nom) {
+    var n = norm(nom);
+    if (!chMedaille || !n) return null;
+    if (/miracul/.test(n)) return 'miraculeuse';
+    if (/coeur|sacre/.test(n)) return 'sacre-coeur';
+    if (/michel|archange/.test(n)) return 'saint-michel';
+    if (/vierge|marie|notre.dame|lourdes/.test(n)) return 'vierge-marie';
+    return 'croix';
+  }
+  // Emplacement de la médaille sur la photo du chapelet (en pixels du calque)
+  var MEDAILLE = { cx: 225.5, cy: 491, h: 97 };
+
   function metalChoisi(nom) { return /argent|acier|silver/.test(norm(nom)) ? 'argent' : 'or'; }
 
   // ------------------------------------------------------------ DÉCORS PHOTO PAR OCCASION
@@ -132,12 +145,17 @@
     return t;
   }
 
-  function chapelet(C, sp, metal) {
+  function chapelet(C, sp, metal, med) {
     var w = C.ombrage.width, h = C.ombrage.height;
     var t = toile(w, h), x = t.getContext('2d');
     x.drawImage(metal === 'argent' ? C.argent : C.or, 0, 0);
     x.globalAlpha = sp.type === 'cristal' ? 0.62 : 1;
     x.drawImage(perlesColorees(C, sp), 0, 0);
+    x.globalAlpha = 1;
+    if (med) { // médaille choisie, posée à la place de celle de la photo
+      var mh = MEDAILLE.h, mw = mh * med.width / med.height;
+      x.drawImage(med, MEDAILLE.cx - mw / 2, MEDAILLE.cy - mh / 2, mw, mh);
+    }
     return t;
   }
 
@@ -146,11 +164,13 @@
     var sp = stylePerles(chPerles.value);
     var metal = metalChoisi(chFinition ? chFinition.value : '');
     var decor = decorPour(chOccasion ? chOccasion.value : '');
+    var nomMed = medaillePour(chMedaille ? chMedaille.value : '');
     var n = ++jeton;
     titre.textContent = decor.titre;
     titre.style.color = decor.couleur;
     cadre.classList.add('charge');
-    Promise.all([calques(), charger('assets/scenes/' + decor.photo + '.jpg')]).then(function (r) {
+    Promise.all([calques(), charger('assets/scenes/' + decor.photo + '.jpg'),
+      nomMed ? charger(DOSSIER + 'medaille-' + nomMed + '-' + metal + '.webp').catch(function () { return null; }) : null]).then(function (r) {
       if (n !== jeton) return; // un choix plus récent est en cours
       var C = r[0], scene = r[1];
       var x = canvas.getContext('2d');
@@ -161,7 +181,7 @@
       g.addColorStop(0, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)');
       x.fillStyle = g; x.fillRect(0, 0, W, 200);
       // chapelet posé avec son ombre portée
-      var ch = chapelet(C, sp, metal);
+      var ch = chapelet(C, sp, metal, r[2]);
       var hh = 860, ww = hh * ch.width / ch.height;
       var px = (W - ww) / 2, py = 100;
       x.save();
@@ -187,7 +207,7 @@
   bloc.hidden = true;
   bloc.innerHTML = '<div class="apercu-cadre"><div class="apercu-scene"><canvas width="' + W + '" height="' + H + '" role="img" aria-label="Aperçu de votre chapelet"></canvas><span class="apercu-titre"></span></div></div>' +
     '<p class="apercu-recap"></p>' +
-    '<p class="apercu-note">Aperçu indicatif : chaque chapelet est fait main ; les perles, la croix et la médaille peuvent varier selon votre choix et les matériaux disponibles.</p>';
+    '<p class="apercu-note">Aperçu indicatif : chaque chapelet est fait main ; les perles, la croix et la médaille peuvent varier selon les matériaux disponibles.</p>';
   photo.insertAdjacentElement('afterend', bloc);
   var cadre = bloc.querySelector('.apercu-scene');
   var canvas = bloc.querySelector('canvas');

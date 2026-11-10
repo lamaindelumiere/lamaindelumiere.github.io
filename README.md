@@ -113,7 +113,9 @@ Sur les fiches des chapelets, le client peut cliquer sur **« ✨ Aperçu de mes
 - **finition** : croix, maillons et médaille en doré ou en argenté ;
 - **occasion** : un décor différent (baptême, communion, confirmation, mariage, ordination, intentions de prière, pèlerinage, fête, cadeau).
 
-La médaille et la croix de l'aperçu sont des exemples ; le choix de médaille du client est rappelé sous l'image.
+- **médaille** : la vraie médaille choisie apparaît (Vierge Marie, Vierge Miraculeuse, Sacré-Cœur de Jésus, Saint Michel Archange). Pour « Autre », une médaille à croix. Si vous ajoutez une médaille dans votre liste, elle est reconnue par son nom (« Vierge », « Marie », « Notre-Dame », « Cœur », « Michel ») ; sinon la médaille à croix s'affiche.
+
+La croix de l'aperçu est un exemple.
 
 Vous pouvez ajouter des couleurs dans vos listes de choix depuis l'espace admin : si le nom contient une couleur connue (« rose », « bleu », « vert »…), l'aperçu la reconnaît. Une couleur inconnue (ou « Autre ») s'affiche en perles nacrées, avec la mention « couleur à préciser ».
 

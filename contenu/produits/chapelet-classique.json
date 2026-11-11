@@ -1,17 +1,13 @@
 {
   "nom": "Chapelet classique",
   "masquer": false,
-  "ordre": 10,
+  "prix": 11,
   "categorie": "chapelets",
-  "prix": 10,
-  "badge": "",
   "photo": "images/chapelet-classique.jpg",
-  "galerie": [],
   "resume": "Création simple, perles et croix.",
   "accroche": "Un chapelet tout en simplicité, monté à la main avec des perles et une croix, pour accompagner votre prière au quotidien.",
   "description": "Le chapelet classique est l'essentiel : une création simple et soignée, réalisée à la main, perle après perle. Il comporte des perles, une croix et une médaille centrale.\n\nIdéal pour la prière quotidienne, à glisser dans un sac ou à offrir en toute occasion.",
   "composition": "Perles, croix, médaille centrale, maillons ou fil marin selon le modèle",
-  "points_forts": [],
   "options": [
     {
       "libelle": "Couleur des perles",
@@ -48,5 +44,6 @@
         "Cadeau / dévotion personnelle"
       ]
     }
-  ]
+  ],
+  "ordre": 10
 }

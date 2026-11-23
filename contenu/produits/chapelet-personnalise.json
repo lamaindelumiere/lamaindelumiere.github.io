@@ -29,8 +29,7 @@
       "type": "liste",
       "obligatoire": true,
       "choix": [
-        "Vierge Miraculeuse",
-        "Autre (à préciser ci-dessous)"
+        "Vierge Miraculeuse"
       ]
     },
     {

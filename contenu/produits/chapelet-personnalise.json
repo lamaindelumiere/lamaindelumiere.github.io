@@ -29,10 +29,7 @@
       "type": "liste",
       "obligatoire": true,
       "choix": [
-        "Vierge Marie",
         "Vierge Miraculeuse",
-        "Sacré-Cœur de Jésus",
-        "Saint Michel Archange",
         "Autre (à préciser ci-dessous)"
       ]
     },
